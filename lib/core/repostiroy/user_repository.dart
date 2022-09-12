@@ -1,24 +1,51 @@
-import 'package:app_chat/ui/pages/home_page.dart';
+import 'package:app_chat/ui/pages/bottoms/bottom_page.dart';
+import 'package:app_chat/ui/pages/pageview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_model.dart';
 import '../provider/register_provider.dart';
+import '../provider/user_provider.dart';
 import 'auth_response.dart';
 
 class UserService {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   User? user;
 
-  Future<AuthRepsonse<User>> login(
-      {required String email, required String password}) async {
-    late UserCredential userCredential;
-
+  Future<void> login(
+      {required String email,
+      required String password,
+      BuildContext? context}) async {
     try {
-      userCredential = await firebaseAuth.signInWithEmailAndPassword(
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+      late DataSnapshot snapshot;
+      UserProvider userProvider =
+          Provider.of<UserProvider>(context!, listen: false);
+      await firebaseAuth
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )
+          .then((value) async {
+        user = FirebaseAuth.instance.currentUser;
+
+        snapshot = await ref.child('users').child(user!.uid).get();
+        print('id${user!.uid}');
+        if (snapshot.exists) {
+          Map data = snapshot.value as Map;
+          data['key'] = snapshot.key;
+
+          UserModel newUser = UserModel.fromMap(data);
+
+          userProvider.usermodel = newUser;
+          userProvider.notify();
+        }
+      }).whenComplete(() {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const BottomPage()));
+      });
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'invalid-email') {
@@ -28,19 +55,7 @@ class UserService {
       } else if (e.code == 'wrong-password') {
         message = 'Hatalı e-posta veya şifre.';
       }
-
-      return AuthRepsonse(
-        isSuccessful: false,
-        message: message,
-      );
-    } catch (e) {
-      return AuthRepsonse(isSuccessful: false, message: 'Hata oluştu. $e');
     }
-    return AuthRepsonse(
-      isSuccessful: true,
-      message: 'Başarıyla hesap oluşturuldu.',
-      data: userCredential.user,
-    );
   }
 
   Future<AuthRepsonse<String>> register(
@@ -58,7 +73,7 @@ class UserService {
           .whenComplete(() {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
+            MaterialPageRoute(builder: (context) => const BottomPage()),
             (route) => false);
       });
       registerProvider.uid = userCredential.user!.uid;
@@ -90,6 +105,9 @@ class UserService {
     // BottomNavBarProvider bottomNavBarProvider = Provider.of<BottomNavBarProvider>(context, listen: false);
     // bottomNavBarProvider.setCurrentIndex(2);
 
-    //  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AuthRedirectScreen()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const PageViewNavPage()),
+        (route) => false);
   }
 }

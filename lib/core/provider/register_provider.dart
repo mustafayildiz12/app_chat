@@ -29,7 +29,7 @@ class RegisterProvider extends ChangeNotifier {
     userProvider.usermodel = userModel;
     await DatabaseService().createAccount(userModel);
     //   await DatabaseService().savePhoneNumber(phoneNumber!, uid!);
-    //   await DatabaseService().saveUsernames(username!, uid!);
+       await DatabaseService().saveUsernames(username!, uid!);
   }
 
   void notify() {

@@ -4,9 +4,9 @@ class UserModel {
   final String uid;
   final String username;
 
-  final String email;
+   String email;
 
-  final String password;
+   String password;
 
   UserModel({
     required this.uid,

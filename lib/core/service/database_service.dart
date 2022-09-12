@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../repostiroy/user_repository.dart';
 
-
 class DatabaseService {
   FirebaseDatabase firebaseDatabase = FirebaseDatabase.instance;
 
@@ -22,18 +21,20 @@ class DatabaseService {
         .catchError((error) => debugPrint('error : $error'));
   }
 
-  Future<void> savePhoneNumber(String phoneNumber, String uid) async {
-    await firebaseDatabase.ref().child('phoneNumbers').child(phoneNumber).set({'number': phoneNumber}).catchError((error) => debugPrint('error : $error'));
-  }
-
   Future<void> saveUsernames(String username, String uid) async {
-    await firebaseDatabase.ref().child('usernames').child(username).set({'username': username}).catchError((error) => debugPrint('error : $error'));
+    await firebaseDatabase
+        .ref()
+        .child('usernames')
+        .child(username)
+        .set({'username': username}).catchError(
+            (error) => debugPrint('error : $error'));
   }
 
   Future<List<UserModel>> getAllUsers() async {
     List<UserModel> users = [];
 
-    DatabaseEvent databaseEvent = await firebaseDatabase.ref().child('users').once();
+    DatabaseEvent databaseEvent =
+        await firebaseDatabase.ref().child('users').once();
 
     if (databaseEvent.snapshot.exists) {
       if (databaseEvent.snapshot.value != null) {
@@ -103,7 +104,8 @@ class DatabaseService {
  */
 
   Future<UserModel?> getUser(String uid) async {
-    DataSnapshot dataSnapshot = await firebaseDatabase.ref().child('users').child(uid).get();
+    DataSnapshot dataSnapshot =
+        await firebaseDatabase.ref().child('users').child(uid).get();
     if (dataSnapshot.exists) {
       Map data = dataSnapshot.value as Map;
       data['key'] = dataSnapshot.key;
