@@ -56,24 +56,19 @@ class DatabaseService {
     return users;
   }
 
-/*
-  Future<DatabaseResponse> getUsers({int count = 50, String? gender}) async {
+  Future<List<UserModel>> getUsers(int count) async {
     List<UserModel> users = [];
     try {
       DatabaseEvent databaseEvent;
-      if (gender == null) {
-        databaseEvent = await firebaseDatabase.ref().child('users').limitToFirst(count).once();
-      } else {
-        databaseEvent = await firebaseDatabase
-            .ref()
-            .child('users')
-            // .orderByChild('showInShake')
-            // .equalTo(true)
-            .orderByChild('gender')
-            .equalTo(gender)
-            .limitToFirst(count)
-            .once();
-      }
+
+      databaseEvent = await firebaseDatabase
+          .ref()
+          .child('users')
+          // .orderByChild('showInShake')
+          // .equalTo(true)
+          .orderByChild('gender')
+          .limitToFirst(count)
+          .once();
 
       if (databaseEvent.snapshot.exists) {
         if (databaseEvent.snapshot.value != null) {
@@ -93,15 +88,9 @@ class DatabaseService {
       }
     } catch (e) {
       print('e : $e');
-      return DatabaseResponse(
-        isSuccessful: false,
-        message: 'Bir hata oluştu. $e',
-      );
     }
-
-    return DatabaseResponse(isSuccessful: true, message: 'Başarılı.', data: users);
+    return users;
   }
- */
 
   Future<UserModel?> getUser(String uid) async {
     DataSnapshot dataSnapshot =

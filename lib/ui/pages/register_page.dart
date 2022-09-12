@@ -15,10 +15,8 @@ class RegisterPage extends StatelessWidget {
     RegisterProvider registerProvider = Provider.of<RegisterProvider>(context);
     return Scaffold(
       body: Container(
-        decoration:  BoxDecoration(
-          color: Colors.amber,
-          borderRadius: BorderRadius.circular(12)
-        ),
+        decoration: BoxDecoration(
+            color: Colors.amber, borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -74,15 +72,11 @@ class RegisterPage extends StatelessWidget {
                       registerProvider.email!.trim(),
                       registerProvider.password!.trim(),
                       context);
-
-                  print(registerProvider.email);
-                  print(registerProvider.password);
-                  print(registerProvider.username);
                 },
                 title: "Register"),
-                SizedBox(
-                  height: Screen.height(context)*4,
-                ),
+            SizedBox(
+              height: Screen.height(context) * 4,
+            ),
           ],
         ),
       ),

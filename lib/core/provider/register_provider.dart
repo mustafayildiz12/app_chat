@@ -12,6 +12,7 @@ class RegisterProvider extends ChangeNotifier {
   String? username;
   String? email;
   String? password;
+  String? profileImage;
 
   Future<void> registerWithProvider(
       String email, String password, BuildContext? context) async {
@@ -19,17 +20,19 @@ class RegisterProvider extends ChangeNotifier {
         .register(email: email, password: password, context: context);
 
     UserModel userModel = UserModel(
-      uid: authRepsonse.data ?? "zama",
-      username: username!,
-      email: email,
-      password: password,
-    );
+        uid: authRepsonse.data ?? "",
+        username: username!,
+        email: email,
+        password: password,
+        profileImage: profileImage ?? '');
     UserProvider userProvider =
         Provider.of<UserProvider>(context!, listen: false);
     userProvider.usermodel = userModel;
+
     await DatabaseService().createAccount(userModel);
+
     //   await DatabaseService().savePhoneNumber(phoneNumber!, uid!);
-       await DatabaseService().saveUsernames(username!, uid!);
+    await DatabaseService().saveUsernames(username!, uid!);
   }
 
   void notify() {

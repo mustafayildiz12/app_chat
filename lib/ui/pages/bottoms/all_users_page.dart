@@ -1,6 +1,7 @@
+import 'dart:collection';
+
 import 'package:app_chat/core/provider/user_provider.dart';
-import 'package:app_chat/core/repostiroy/user_repository.dart';
-import 'package:app_chat/core/service/database_service.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,12 +16,43 @@ class AllUsersPage extends StatefulWidget {
 
 class _AllUsersPageState extends State<AllUsersPage>
     with SingleTickerProviderStateMixin {
-  late final Future<List<UserModel>>? _allUsersFuture;
+  int itemsCount = 7;
 
   @override
   void initState() {
-    _allUsersFuture = DatabaseService().getAllUsers();
     super.initState();
+    scrollControllerListener();
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  bool showBottomLoading = false;
+
+  void scrollControllerListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.hasClients) {
+        if (_scrollController.offset >
+            _scrollController.position.maxScrollExtent - 50) {
+          setState(() {
+            showBottomLoading = true;
+          });
+        } else {
+          setState(() {
+            showBottomLoading = false;
+          });
+        }
+        if (_scrollController.offset ==
+            _scrollController.position.maxScrollExtent) {
+          print('has reached the bottom');
+          Future.delayed(Duration.zero).then((value) async {
+            setState(() {
+              itemsCount += 10;
+              print('new itemsCount set to: $itemsCount');
+              showBottomLoading = false;
+            });
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -31,22 +63,41 @@ class _AllUsersPageState extends State<AllUsersPage>
         title: Text(userProvider.usermodel!.username),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        UserService().logout(context);
-      }),
-      body: FutureBuilder(
-          future: _allUsersFuture,
-          builder: (context, AsyncSnapshot<List<UserModel>> snapshot) {
+      body: FutureBuilder<DataSnapshot>(
+          future: FirebaseDatabase.instance
+              .ref()
+              .child('users')
+              .limitToFirst(itemsCount)
+              .get(),
+          builder: (context, snapshot) {
             if (snapshot.hasData) {
+              DataSnapshot dataSnapshot = snapshot.data!;
+              List<UserModel> users = [];
+
+              if (dataSnapshot.value.runtimeType == List<Object?>) {
+                users = (dataSnapshot.value as List)
+                    .map((user) => UserModel.fromMap(user as Map))
+                    .toList();
+              } else {
+                LinkedHashMap usersMap = dataSnapshot.value as LinkedHashMap;
+                users = usersMap.entries
+                    .map((e) => UserModel.fromMap(e.value as Map))
+                    .toList();
+              }
               return ListView.builder(
-                itemCount: snapshot.data!.length,
+                controller: _scrollController,
+                itemCount: users.length,
                 itemBuilder: (context, index) {
-                  final data = snapshot.data![index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(data.email),
-                      subtitle: Text(data.password),
-                      //   trailing: Text(data.uid),
+                  final data = users[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(data.email),
+                        subtitle: Text(data.password),
+                        leading: Text('$index'),
+                        //   trailing: Text(data.uid),
+                      ),
                     ),
                   );
                 },

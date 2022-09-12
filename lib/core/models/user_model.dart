@@ -5,6 +5,7 @@ class UserModel {
   final String username;
 
    String email;
+   String? profileImage;
 
    String password;
 
@@ -13,6 +14,7 @@ class UserModel {
     required this.username,
     required this.email,
     required this.password,
+    this.profileImage
   });
 
   UserModel copyWith({
@@ -20,12 +22,14 @@ class UserModel {
     String? username,
     String? email,
     String? password,
+    String? profileImage
   }) {
     return UserModel(
       uid: uid ?? this.uid,
       username: username ?? this.username,
       email: email ?? this.email,
       password: password ?? this.password,
+      profileImage: profileImage ?? this.profileImage
     );
   }
 
@@ -38,6 +42,7 @@ class UserModel {
     result.addAll({'email': email});
 
     result.addAll({'password': password});
+    result.addAll({'profileImage':profileImage});
 
     return result;
   }
@@ -48,6 +53,7 @@ class UserModel {
       username: map['username'] ?? '',
       email: map['email'] ?? '',
       password: map['password'] ?? '',
+      profileImage: map['profileImage'] ?? ''
     );
   }
 
@@ -58,7 +64,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, username: $username, email: $email, password: $password)';
+    return 'UserModel(uid: $uid, username: $username, email: $email, password: $password,profileImage: $profileImage)';
   }
 
   @override
@@ -69,6 +75,7 @@ class UserModel {
         other.uid == uid &&
         other.username == username &&
         other.email == email &&
+        other.profileImage == profileImage &&
         other.password == password;
   }
 
@@ -77,6 +84,7 @@ class UserModel {
     return uid.hashCode ^
         username.hashCode ^
         email.hashCode ^
+        profileImage.hashCode ^
         password.hashCode;
   }
 }
