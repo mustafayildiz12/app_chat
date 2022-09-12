@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/provider/user_provider.dart';
-import 'all_users_page.dart';
-import 'profile_page.dart';
+import 'all_users_page/all_users_page.dart';
+import 'profile_page/profile_page.dart';
 
 class BottomPage extends StatefulWidget {
   const BottomPage({Key? key}) : super(key: key);

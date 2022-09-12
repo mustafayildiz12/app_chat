@@ -2,35 +2,32 @@ import 'dart:convert';
 
 class UserModel {
   final String uid;
-  final String username;
+  String username;
 
-   String email;
-   String? profileImage;
+  String email;
+  String? profileImage;
 
-   String password;
+  String password;
 
-  UserModel({
-    required this.uid,
-    required this.username,
-    required this.email,
-    required this.password,
-    this.profileImage
-  });
+  UserModel(
+      {required this.uid,
+      required this.username,
+      required this.email,
+      required this.password,
+      this.profileImage});
 
-  UserModel copyWith({
-    String? uid,
-    String? username,
-    String? email,
-    String? password,
-    String? profileImage
-  }) {
+  UserModel copyWith(
+      {String? uid,
+      String? username,
+      String? email,
+      String? password,
+      String? profileImage}) {
     return UserModel(
-      uid: uid ?? this.uid,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      password: password ?? this.password,
-      profileImage: profileImage ?? this.profileImage
-    );
+        uid: uid ?? this.uid,
+        username: username ?? this.username,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        profileImage: profileImage ?? this.profileImage);
   }
 
   Map<String, dynamic> toMap() {
@@ -42,19 +39,18 @@ class UserModel {
     result.addAll({'email': email});
 
     result.addAll({'password': password});
-    result.addAll({'profileImage':profileImage});
+    result.addAll({'profileImage': profileImage});
 
     return result;
   }
 
   factory UserModel.fromMap(Map<dynamic, dynamic> map) {
     return UserModel(
-      uid: map['uid'] ?? '',
-      username: map['username'] ?? '',
-      email: map['email'] ?? '',
-      password: map['password'] ?? '',
-      profileImage: map['profileImage'] ?? ''
-    );
+        uid: map['uid'] ?? '',
+        username: map['username'] ?? '',
+        email: map['email'] ?? '',
+        password: map['password'] ?? '',
+        profileImage: map['profileImage'] ?? '');
   }
 
   String toJson() => json.encode(toMap());

@@ -15,6 +15,13 @@ class _PageViewNavPageState extends State<PageViewNavPage> {
   int currentPageValue = 0;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
