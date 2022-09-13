@@ -30,6 +30,17 @@ class DatabaseService {
             (error) => debugPrint('error : $error'));
   }
 
+  Future<void> sendMessage(
+      String chatId, String message, String senderId, String receiverId) async {
+    await firebaseDatabase.ref().child('chats').child(chatId).set({
+      'messages': {
+        'senderId': senderId,
+        'receiverId': receiverId,
+        'message': message
+      }
+    }).catchError((error) => debugPrint('error : $error'));
+  }
+
   Future<List<UserModel>> getAllUsers() async {
     List<UserModel> users = [];
 

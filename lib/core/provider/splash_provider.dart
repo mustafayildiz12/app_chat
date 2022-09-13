@@ -47,6 +47,10 @@ class SplashProvider extends ChangeNotifier {
         userProvider.usermodel = newUser;
 
         userProvider.notify();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomPage()),
+          (route) => false);
       } else {
         Navigator.pushAndRemoveUntil(
             context,
@@ -55,10 +59,7 @@ class SplashProvider extends ChangeNotifier {
       }
       await Future.delayed(const Duration(seconds: 3));
 
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const BottomPage()),
-          (route) => false);
+      
 
       return;
     }

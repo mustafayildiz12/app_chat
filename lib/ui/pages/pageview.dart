@@ -36,6 +36,7 @@ class _PageViewNavPageState extends State<PageViewNavPage> {
               SizedBox(
                 height: Screen.height(context)*60,
                 child: PageView.builder(
+                  itemCount: 2,
                   controller: _pageController,
                   onPageChanged: (v) {
                     setState(() {

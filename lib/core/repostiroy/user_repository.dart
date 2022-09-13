@@ -42,18 +42,30 @@ class UserService {
           userProvider.usermodel = newUser;
           userProvider.notify();
         }
-      }).whenComplete(() {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const BottomPage()));
+        if (user != null) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomPage()),
+              (route) => false);
+        }
       });
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'invalid-email') {
         message = 'Geçersiz e-posta.';
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text(message),
+        ));
       } else if (e.code == 'user-not-found') {
         message = 'Kullanıcı bulunmamaktadır.';
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text(message),
+        ));
       } else if (e.code == 'wrong-password') {
         message = 'Hatalı e-posta veya şifre.';
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text(message),
+        ));
       }
     }
   }
@@ -70,24 +82,32 @@ class UserService {
         email: email,
         password: password,
       )
-          .whenComplete(() {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const BottomPage()),
-            (route) => false);
+          .then((v) {
+        if (v.user == null) {
+          print("null");
+        } else {
+          registerProvider.uid = v.user!.uid;
+          registerProvider.notify();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomPage()),
+              (route) => false);
+        }
       });
-      registerProvider.uid = userCredential.user!.uid;
-      registerProvider.notify();
-      print("zaza");
+
       return AuthRepsonse(
           isSuccessful: true,
           message: "success",
           data: userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print("Weak Password");
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Weak Password"),
+        ));
       } else if (e.code == 'email-already-in-use') {
-        print("Same email");
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("email-already-in-use"),
+        ));
       }
     } catch (e) {
       print(e);
@@ -109,5 +129,23 @@ class UserService {
         context,
         MaterialPageRoute(builder: (context) => const PageViewNavPage()),
         (route) => false);
+  }
+
+  Future<void> chechUsername(String username, BuildContext context,
+      ValueNotifier<bool> isAvailable) async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    DataSnapshot snapshot = await ref.child('usernames').child(username).get();
+
+    if (snapshot.exists) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('The username already in use!'),
+      ));
+      isAvailable.value = false;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('The username is available'),
+      ));
+      isAvailable.value = true;
+    }
   }
 }

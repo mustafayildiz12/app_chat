@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/models/user_model.dart';
+import '../../chats/chat_page.dart';
 
 class AllUsersPage extends StatefulWidget {
   const AllUsersPage({Key? key}) : super(key: key);
@@ -86,12 +87,16 @@ class _AllUsersPageState extends State<AllUsersPage> {
                       users = (dataSnapshot.value as List)
                           .map((user) => UserModel.fromMap(user as Map))
                           .toList();
+                      users.removeWhere((element) =>
+                          element.uid == userProvider.usermodel!.uid);
                     } else {
                       LinkedHashMap usersMap =
                           dataSnapshot.value as LinkedHashMap;
                       users = usersMap.entries
                           .map((e) => UserModel.fromMap(e.value as Map))
                           .toList();
+                      users.removeWhere((element) =>
+                          element.uid == userProvider.usermodel!.uid);
                     }
                     return ListView.builder(
                       controller: _scrollController,
@@ -102,6 +107,16 @@ class _AllUsersPageState extends State<AllUsersPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
                             child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                      getDetails: data,
+                                    ),
+                                  ),
+                                );
+                              },
                               title: Text(data.username),
                               subtitle: Text(data.email),
                               leading: data.profileImage != ''

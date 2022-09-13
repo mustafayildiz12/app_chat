@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(30.0),
-          child: Icon(Icons.flutter_dash,size: 45,),
+          child: Icon(Icons.flutter_dash,size: 80,),
         ),
       ),
     );

@@ -88,16 +88,14 @@ class _ProfilePageState extends State<ProfilePage> {
               itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 1,
-                      onTap: () async {
-                        await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return _UpdateUserNameDialog(
-                                  newUsername: newUsername,
-                                  userProvider: userProvider);
-                            });
-                      },
-                      child: const Text("Change Username"),
+                      child: GestureDetector(
+                          onTap: () async {
+                            await _UpdateUserNameDialog(
+                              userProvider: userProvider,
+                              newUsername: newUsername,
+                            ).show(context);
+                          },
+                          child: const Text("Change Username")),
                     ),
                     PopupMenuItem(
                       value: 2,
@@ -189,6 +187,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             'images/${userProvider.usermodel!.email}/profileImage.png';
 
                         await uploadFile(context);
+                        setState(() {
+                          isLoading = false;
+                        });
                       }
                     },
                     title: "Save"),
@@ -197,6 +198,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+extension SettingsDialogExtension on _UpdateUserNameDialog {
+  show(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => this,
     );
   }
 }
