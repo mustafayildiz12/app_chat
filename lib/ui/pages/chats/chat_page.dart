@@ -1,10 +1,12 @@
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/models/user_model.dart';
-import 'package:app_chat/core/service/database_service.dart';
+import 'package:app_chat/core/service/chat_service.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/provider/user_provider.dart';
+import '../../../core/service/database_service.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel getDetails;
@@ -16,7 +18,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _chat = TextEditingController();
-  final List<String> chatList = [];
+  // final List<String> chatList = [];
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -42,16 +44,55 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: [
           Expanded(
-              child: ListView.builder(
-                  itemCount: chatList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        child: Text(
-                      chatList[index],
-                      textAlign:
-                          index % 2 == 0 ? TextAlign.left : TextAlign.right,
-                    ));
-                  })),
+            child: StreamBuilder(
+              stream: DatabaseService().chatStream(
+                  '${userProvider.usermodel!.uid}${widget.getDetails.uid}'),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data != null) {
+                    var data = (snapshot.data as DatabaseEvent).snapshot.value;
+                    if (data != null) {
+                      Map dataMap = data as Map;
+                      final chatID = dataMap['chatID'];
+                      return ListTile(
+                        title: Text(data.length.toString()),
+                      );
+                    } else {
+                      return StreamBuilder(
+                        stream: DatabaseService().chatStream(
+                            '${widget.getDetails.uid}${userProvider.usermodel!.uid}'),
+                        builder: (context, snapshot) {
+
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null) {
+                              var data = (snapshot.data as DatabaseEvent)
+                                  .snapshot
+                                  .value;
+                                  print(data);
+                              if (data != null) {
+                                Map dataMap = data as Map;
+                                final chatID = dataMap['chatID'];
+                                return ListTile(
+                                  subtitle: Text(dataMap.toString()),
+                                );
+                              }
+                            } else {
+                              return const Center(child: Text('Mesaj Yok'));
+                            }
+                          }
+                          return const Center(child: Text('Mesaj Yok'));
+                        },
+                      );
+                    }
+                  } else {
+                    return const SizedBox();
+                  }
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -70,14 +111,11 @@ class _ChatPageState extends State<ChatPage> {
                     backgroundColor: Colors.blue,
                     child: IconButton(
                       onPressed: () async {
-                        chatList.add(_chat.text);
-
-                        await DatabaseService().sendMessage(
-                            widget.getDetails.uid + userProvider.usermodel!.uid,
-                            _chat.text,
-                            userProvider.usermodel!.uid,
-                            widget.getDetails.uid);
-                        setState(() {});
+                        await ChatService().sendMessage(context,
+                            chatUser: widget.getDetails,
+                            message: _chat.text,
+                            chatID:
+                                '${widget.getDetails.uid}${userProvider.usermodel!.uid}');
                         _chat.clear();
                       },
                       icon: const Icon(Icons.send_sharp),

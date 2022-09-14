@@ -113,6 +113,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                   MaterialPageRoute(
                                     builder: (context) => ChatPage(
                                       getDetails: data,
+                                    
                                     ),
                                   ),
                                 );
