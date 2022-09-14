@@ -11,19 +11,18 @@ class ChatService {
 
   Future<void> sendMessage(
     BuildContext context, {
-   required String chatID,
+    required String chatID,
     required UserModel chatUser,
     required String message,
- //   required void Function(String chatID) onNewChatID,
+    //   required void Function(String chatID) onNewChatID,
     //   bool isImage = false,
     //   bool isVideo = false,
     //   bool isVoice = false,
   }) async {
     UserModel userModel =
         Provider.of<UserProvider>(context, listen: false).usermodel!;
-   
 
-    
+    /*
       await FirebaseDatabase.instance
           .ref('users')
           .child(userModel.uid)
@@ -36,35 +35,69 @@ class ChatService {
           .child('chats')
           .push()
           .set(chatID);
+       */
 
-     
-      await database.ref('chats').child(chatID).update({
-        'chatID': chatID,
-        'users': [
-          {
-            'uid': userModel.uid,
-            'username': userModel.username,
-            'profilePicture': userModel.profileImage,
-            'starter': true,
-          },
-          {
-            'uid': chatUser.uid,
-            'username': chatUser.username,
-            'profilePicture': chatUser.profileImage,
-            'starter': false,
-          },
-        ],
-        'anonym': true,
-      });
+    await database.ref('chats').child(userModel.uid + chatUser.uid).update({
+      'chatID': userModel.uid + chatUser.uid,
+      'users': [
+        {
+          'uid': userModel.uid,
+          'username': userModel.username,
+          'profilePicture': userModel.profileImage,
+          'starter': true,
+        },
+        {
+          'uid': chatUser.uid,
+          'username': chatUser.username,
+          'profilePicture': chatUser.profileImage,
+          'starter': false,
+        },
+      ],
+      //  'anonym': true,
+    });
+
+    await database.ref('chats').child(chatUser.uid + userModel.uid).update({
+      'chatID': chatUser.uid + userModel.uid,
+      'users': [
+        {
+          'uid': chatUser.uid,
+          'username': chatUser.username,
+          'profilePicture': chatUser.profileImage,
+          'starter': false,
+        },
+        {
+          'uid': userModel.uid,
+          'username': userModel.username,
+          'profilePicture': userModel.profileImage,
+          'starter': true,
+        },
+      ],
+      //  'anonym': true,
+    });
+
     //  onNewChatID(newChatID);
-    
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-    await database.ref('chats').child(chatID).child('messages').child(id).set({
+    await database
+        .ref('chats')
+        .child(userModel.uid + chatUser.uid)
+        .child('messages')
+        .child(id)
+        .set({
       'message': message,
-     // 'isImage': isImage,
-     // 'isVideo': isVideo,
-     // 'isVoice': isVoice,
+      'date': DateTime.now().toString(),
+      'senderUID': userModel.uid,
+      'seen': false,
+      'id': id,
+    });
+
+    await database
+        .ref('chats')
+        .child(chatUser.uid + userModel.uid)
+        .child('messages')
+        .child(id)
+        .set({
+      'message': message,
       'date': DateTime.now().toString(),
       'senderUID': userModel.uid,
       'seen': false,

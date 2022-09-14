@@ -6,18 +6,16 @@ class Message {
   bool seen;
   String senderUID;
   String id;
-  bool isImage;
-  bool isVideo;
-  bool isVoice;
+ // bool isImage;
+ // bool isVideo;
+ // bool isVoice;
   Message({
     required this.message,
     required this.date,
     required this.seen,
     required this.senderUID,
     required this.id,
-    required this.isImage,
-    required this.isVideo,
-    required this.isVoice,
+   
   });
 
   Message copyWith({
@@ -33,9 +31,7 @@ class Message {
       seen: seen ?? this.seen,
       senderUID: senderUID ?? this.senderUID,
       id: id ?? this.id,
-      isImage: isImage,
-      isVideo: isVideo,
-      isVoice: isVoice,
+   
     );
   }
 
@@ -47,9 +43,7 @@ class Message {
     result.addAll({'seen': seen});
     result.addAll({'senderUID': senderUID});
     result.addAll({'id': id});
-    result.addAll({'isImage': isImage});
-    result.addAll({'isVideo': isVideo});
-    result.addAll({'isVoice': isVoice});
+   
 
     return result;
   }
@@ -61,9 +55,7 @@ class Message {
       seen: map['seen'] ?? false,
       senderUID: map['senderUID'] ?? '',
       id: map['id'] ?? '',
-      isImage: map['isImage'] ?? false,
-      isVideo: map['isVideo'] ?? false,
-      isVoice: map['isVoice'] ?? false,
+     
     );
   }
 
