@@ -60,7 +60,8 @@ class _ChatPageState extends State<ChatPage> {
                         myUser: userProvider.usermodel!,
                       );
                     } else {
-                      return StreamBuilder(
+                      /*
+                       return StreamBuilder(
                         stream: DatabaseService().chatStream(
                             '${widget.getDetails.uid}${userProvider.usermodel!.uid}'),
                         builder: (context, snapshot) {
@@ -85,6 +86,8 @@ class _ChatPageState extends State<ChatPage> {
                           return const Center(child: Text('Mesaj Yok'));
                         },
                       );
+                       */
+                     return const Text('aa');
                     }
                   } else {
                     return const SizedBox();
