@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:app_chat/core/service/chat_service.dart';
@@ -55,39 +57,22 @@ class _ChatPageState extends State<ChatPage> {
                     if (data != null) {
                       Map dataMap = data as Map;
                       final chatID = dataMap['chatID'];
+                      DatabaseEvent databaseEvent =
+                          snapshot.data as DatabaseEvent;
+
+                      LinkedHashMap linkedHashMap =
+                          (databaseEvent.snapshot.value as Map)['messages'];
+                      List messages = linkedHashMap.entries.toList();
+                      messages.sort(
+                          (a, b) => b.value['date'].compareTo(a.value['date']));
+
                       return MessagesList(
                         chatID: chatID,
                         myUser: userProvider.usermodel!,
+                        messages: messages,
                       );
                     } else {
-                      /*
-                       return StreamBuilder(
-                        stream: DatabaseService().chatStream(
-                            '${widget.getDetails.uid}${userProvider.usermodel!.uid}'),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data != null) {
-                              var data = (snapshot.data as DatabaseEvent)
-                                  .snapshot
-                                  .value;
-
-                              if (data != null) {
-                                Map dataMap = data as Map;
-                                final chatID = dataMap['chatID'];
-                                return MessagesList(
-                                  chatID: chatID,
-                                  myUser: userProvider.usermodel!,
-                                );
-                              }
-                            } else {
-                              return const Center(child: Text('Mesaj Yok'));
-                            }
-                          }
-                          return const Center(child: Text('Mesaj Yok'));
-                        },
-                      );
-                       */
-                     return const Text('aa');
+                      return const SizedBox();
                     }
                   } else {
                     return const SizedBox();

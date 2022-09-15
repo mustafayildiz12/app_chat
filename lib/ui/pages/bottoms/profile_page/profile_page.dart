@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_chat/core/class/screen_class.dart';
+import 'package:app_chat/core/provider/theme_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
 import 'package:app_chat/ui/product/loading_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -79,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Profile"),
@@ -103,6 +105,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         UserService().logout(context);
                       },
                       child: const Text("Sign Out"),
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Text(themeChange.darkTheme
+                              ? 'Dark Theme'
+                              : 'Light Theme'),
+                          Checkbox(
+                              value: themeChange.darkTheme,
+                              onChanged: (value) {
+                                themeChange.darkTheme = value!;
+                                Navigator.pop(context);
+                              }),
+                        ],
+                      ),
                     )
                   ])
         ],
