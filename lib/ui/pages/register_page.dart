@@ -1,6 +1,5 @@
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/repostiroy/user_repository.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   ValueNotifier<bool> isAvailable = ValueNotifier(false);
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
-  bool isValid = false;
+  ValueNotifier<bool> isRegistering = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             onChanged: (v) {
                               registerProvider.email = v;
                               registerProvider.notify();
-                              isValid = EmailValidator.validate(v);
                             },
-                           
                             decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.email),
                                 labelText: "Email",
@@ -95,7 +92,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               registerProvider.password = v;
                               registerProvider.notify();
                             },
-                         
                             obscureText: true,
                             decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.lock),
@@ -103,29 +99,34 @@ class _RegisterPageState extends State<RegisterPage> {
                                 border: OutlineInputBorder()),
                           ),
                         ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              if (registerProvider.email == null ||
-                                  registerProvider.password == null) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text('Fill all the infos'),
-                                ));
-                              } else {
-                                if (isValid) {
+                        ValueListenableBuilder(
+                          valueListenable: isRegistering,
+                          builder: (context, value, child) {
+                            return ElevatedButton(
+                              onPressed: () async {
+                                if (registerProvider.email == null ||
+                                    registerProvider.password == null) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text('Fill all the infos'),
+                                  ));
+                                } else {
+                                  isRegistering.value = true;
                                   await registerProvider.registerWithProvider(
                                       registerProvider.email!.trim(),
                                       registerProvider.password!.trim(),
                                       context);
-                                } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text('wrong email format'),
-                                  ));
+                                  isRegistering.value = false;
                                 }
-                              }
-                            },
-                             child: const Text("Register"),),
+                              },
+                              child: isRegistering.value
+                                  ?  CircularProgressIndicator(
+                                    color: Theme.of(context).indicatorColor,
+                                  )
+                                  : const Text("Register"),
+                            );
+                          },
+                        )
                       ],
                     ),
                   ),

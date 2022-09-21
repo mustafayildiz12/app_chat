@@ -1,4 +1,3 @@
-import 'package:app_chat/core/repostiroy/auth_response.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +15,11 @@ class RegisterProvider extends ChangeNotifier {
 
   Future<void> registerWithProvider(
       String email, String password, BuildContext? context) async {
-    AuthRepsonse<String> authRepsonse = await UserService()
+    await UserService()
         .register(email: email, password: password, context: context);
 
     UserModel userModel = UserModel(
-        uid: authRepsonse.data ?? "",
+        uid: uid ?? 'zaza',
         username: username!,
         myFollowers: [],
         email: email,

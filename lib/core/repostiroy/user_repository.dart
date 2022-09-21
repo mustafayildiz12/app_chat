@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 import '../provider/register_provider.dart';
 import '../provider/user_provider.dart';
-import 'auth_response.dart';
 
 class UserService {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -70,7 +69,7 @@ class UserService {
     }
   }
 
-  Future<AuthRepsonse<String>> register(
+  Future<void> register(
       {required String email,
       required String password,
       BuildContext? context}) async {
@@ -94,13 +93,13 @@ class UserService {
               (route) => false);
         }
       });
-
-      return AuthRepsonse(
-          isSuccessful: true,
-          message: "success",
-          data: userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
+      print(e);
+      if (e.code == 'invalid-email') {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Geçersiz e-posta.'),
+        ));
+      } else if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Weak Password"),
         ));
@@ -112,8 +111,6 @@ class UserService {
     } catch (e) {
       print(e);
     }
-    return AuthRepsonse(
-        isSuccessful: true, message: "success", data: registerProvider.uid);
   }
 
   User? getCurrentUser() {

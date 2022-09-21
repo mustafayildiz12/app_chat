@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool isValid = false;
+  bool isLoading = false;
   final TextEditingController _email = TextEditingController();
   final TextEditingController _pasword = TextEditingController();
   @override
@@ -50,21 +50,33 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton(
                 onPressed: () async {
+
                   if (_pasword.text.isEmpty || _email.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Fill all the infos'),
                     ));
                   } else {
+                    setState(() {
+                      isLoading = true;
+                    });
                     await UserService().login(
-                        email: _email.text,
-                        password: _pasword.text,
+                        email: _email.text.trim(),
+                        password: _pasword.text.trim(),
                         context: context);
-                    userProvider.usermodel!.email = _email.text;
-                    userProvider.usermodel!.password = _pasword.text;
+                    userProvider.usermodel!.email = _email.text.trim();
+                    userProvider.usermodel!.password = _pasword.text.trim();
                     userProvider.notify();
+                    setState(() {
+                      isLoading = false;
+                    });
                   }
                 },
-                child: const Text("Login")),
+                child:isLoading ?  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).indicatorColor,
+                  ),
+                ) : const Text("Login")),
             SizedBox(
               height: Screen.height(context) * 4,
             ),
