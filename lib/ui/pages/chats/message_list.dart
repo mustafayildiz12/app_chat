@@ -60,22 +60,6 @@ class MessagesList extends StatelessWidget {
 
                 bool sendedByMe = message.senderUID == myUser.uid;
 
-                /*
-                if (!sendedByMe &&
-                    !chatDetailProvider.readedMessages.contains(message)) {
-                  chatDetailProvider.setSeen(message, chatID);
-                }
-               */
-
-                //  bool togetherWithBottom = false;
-
-                /*
-                if (index != 0 &&
-                    message.senderUID ==
-                        messages[index - 1].value['senderUID']) {
-                  togetherWithBottom = true;
-                }
-               */
                 final myDate = DateTime.parse(message.date);
 
                 return Align(
@@ -86,22 +70,38 @@ class MessagesList extends StatelessWidget {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        margin: EdgeInsets.only(
-                            left: sendedByMe ? 50 : 0,
-                            right: sendedByMe ? 0 : 50,
-                            bottom: 8),
-                        decoration: BoxDecoration(
-                            color: sendedByMe
-                                ? Theme.of(context).errorColor
-                                : Theme.of(context).hintColor,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Text(
-                          message.message,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
+                      message.message.contains('.png')
+                          ? Container(
+                              padding: const EdgeInsets.all(8.0),
+                              margin: EdgeInsets.only(
+                                  left: sendedByMe ? 50 : 0,
+                                  right: sendedByMe ? 0 : 50,
+                                  bottom: 8),
+                              decoration: BoxDecoration(
+                                  color: sendedByMe
+                                      ? Theme.of(context).errorColor
+                                      : Theme.of(context).hintColor,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Image.network(
+                                message.message,
+                              ),
+                            )
+                          : Container(
+                              padding: const EdgeInsets.all(8.0),
+                              margin: EdgeInsets.only(
+                                  left: sendedByMe ? 50 : 0,
+                                  right: sendedByMe ? 0 : 50,
+                                  bottom: 8),
+                              decoration: BoxDecoration(
+                                  color: sendedByMe
+                                      ? Theme.of(context).errorColor
+                                      : Theme.of(context).hintColor,
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Text(
+                                message.message,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
                       Row(
                         mainAxisAlignment: sendedByMe
                             ? MainAxisAlignment.end

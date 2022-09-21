@@ -15,27 +15,12 @@ class ChatService {
     required UserModel chatUser,
     required String message,
     //   required void Function(String chatID) onNewChatID,
-    //   bool isImage = false,
-    //   bool isVideo = false,
+    bool isImage = false,
+    bool isVideo = false,
     //   bool isVoice = false,
   }) async {
     UserModel userModel =
         Provider.of<UserProvider>(context, listen: false).usermodel!;
-
-    /*
-      await FirebaseDatabase.instance
-          .ref('users')
-          .child(userModel.uid)
-          .child('chats')
-          .push()
-          .set(chatID);
-      await FirebaseDatabase.instance
-          .ref('users')
-          .child(chatUser.uid)
-          .child('chats')
-          .push()
-          .set(chatID);
-       */
 
     await database.ref('chats').child(userModel.uid + chatUser.uid).update({
       'chatID': userModel.uid + chatUser.uid,
@@ -59,6 +44,7 @@ class ChatService {
 
     await database.ref('chats').child(chatUser.uid + userModel.uid).update({
       'chatID': chatUser.uid + userModel.uid,
+      'lastMessage': message,
       'users': [
         {
           'uid': chatUser.uid,
@@ -90,6 +76,8 @@ class ChatService {
       'senderUID': userModel.uid,
       'seen': false,
       'id': id,
+      'isImage': isImage,
+      'isVideo': isVideo,
     });
 
     await database
@@ -103,6 +91,8 @@ class ChatService {
       'senderUID': userModel.uid,
       'seen': false,
       'id': id,
+      'isImage': isImage,
+      'isVideo': isVideo,
     });
 
     //  UserModel? userModel = await DatabaseService().getUser(chatUser.uid);

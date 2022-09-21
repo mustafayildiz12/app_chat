@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +14,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
 //  List<Message> readedMessages = [];
 
-//  File? imageToUpload;
+  File? imageToUpload;
 
   bool recordingStarted = false;
   bool showTextfield = true;
@@ -45,7 +47,7 @@ class ChatDetailProvider extends ChangeNotifier {
     required void Function(String) onNewChatID,
     bool isImage = false,
     bool isVideo = false,
-    bool isVoice = false,
+  //  bool isVoice = false,
   }) async {
     controller.clear();
     await ChatService().sendMessage(context,
@@ -53,8 +55,9 @@ class ChatDetailProvider extends ChangeNotifier {
         message: message,
        // onNewChatID: onNewChatID,
         chatID: chatID,
-      //  isImage: isImage,
-      //  isVideo: isVideo,
+        isImage: isImage,
+        isVideo: isVideo,
+       // isVoice: is
       //  isVoice: isVoice);
     );
     const Duration(milliseconds: 300);
