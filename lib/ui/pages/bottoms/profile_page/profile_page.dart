@@ -172,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               SizedBox(
-                height: Screen.height(context) * 5,
+                height: Screen.height(context) * 3,
               ),
               Padding(
                 padding:
@@ -192,8 +192,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                child: Card(
+                  child: ListTile(
+                    subtitle: Text(
+                        userProvider.usermodel!.myFollowers.length.toString()),
+                    title: const Text("Takip Edilen Kişi Sayısı"),
+                  ),
+                ),
+              ),
               SizedBox(
-                height: Screen.height(context) * 5,
+                height: Screen.height(context) * 3,
               ),
               Visibility(
                 visible: isLoading,

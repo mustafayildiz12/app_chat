@@ -39,6 +39,7 @@ class ChatService {
 
     await database.ref('chats').child(userModel.uid + chatUser.uid).update({
       'chatID': userModel.uid + chatUser.uid,
+      'lastMessage': message,
       'users': [
         {
           'uid': userModel.uid,

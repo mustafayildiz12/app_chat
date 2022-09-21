@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:app_chat/core/service/chat_service.dart';
@@ -21,29 +19,64 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _chat = TextEditingController();
-  // final List<String> chatList = [];
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.getDetails.username),
-          leading: widget.getDetails.profileImage != ""
-              ? Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(
-                    radius: Screen.height(context) * 3,
-                    backgroundImage:
-                        NetworkImage(widget.getDetails.profileImage!),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(
-                    radius: Screen.height(context) * 3,
-                    child: const Icon(Icons.flutter_dash),
-                  ),
-                )),
+        title: Text(widget.getDetails.username),
+        leading: widget.getDetails.profileImage != ""
+            ? Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: CircleAvatar(
+                  radius: Screen.height(context) * 3,
+                  backgroundImage:
+                      NetworkImage(widget.getDetails.profileImage!),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: CircleAvatar(
+                  radius: Screen.height(context) * 3,
+                  child: const Icon(Icons.flutter_dash),
+                ),
+              ),
+        actions: [
+          PopupMenuButton(
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text(userProvider.usermodel!.myFollowers
+                              .contains(widget.getDetails.uid)
+                          ? "Takibi Bırak"
+                          : "Takip Et"),
+                      onTap: () async {
+                        final DatabaseReference ref = FirebaseDatabase.instance
+                            .ref("users")
+                            .child(userProvider.usermodel!.uid);
+                        if (userProvider.usermodel!.myFollowers
+                            .contains(widget.getDetails.uid)) {
+                          userProvider.usermodel!.myFollowers
+                              .remove(widget.getDetails.uid);
+                          userProvider.notify();
+                          await ref.update({
+                            "myFollowers": userProvider.usermodel!.myFollowers,
+                          });
+                          print(1.1);
+                        } else {
+                          userProvider.usermodel!.myFollowers
+                              .add(widget.getDetails.uid);
+                          userProvider.notify();
+                          await ref.update({
+                            "myFollowers": userProvider.usermodel!.myFollowers,
+                          });
+                          print(2.1);
+                        }
+                      },
+                    )
+                  ])
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -57,28 +90,18 @@ class _ChatPageState extends State<ChatPage> {
                     if (data != null) {
                       Map dataMap = data as Map;
                       final chatID = dataMap['chatID'];
-                      DatabaseEvent databaseEvent =
-                          snapshot.data as DatabaseEvent;
-
-                      LinkedHashMap linkedHashMap =
-                          (databaseEvent.snapshot.value as Map)['messages'];
-                      List messages = linkedHashMap.entries.toList();
-                      messages.sort(
-                          (a, b) => b.value['date'].compareTo(a.value['date']));
-
                       return MessagesList(
                         chatID: chatID,
                         myUser: userProvider.usermodel!,
-                        messages: messages,
                       );
                     } else {
-                      return const SizedBox();
+                      return const Center(child: Text("Zaza"));
                     }
                   } else {
-                    return const SizedBox();
+                    return const Text("Zaza");
                   }
                 } else {
-                  return const SizedBox();
+                  return const Text("Zaza");
                 }
               },
             ),

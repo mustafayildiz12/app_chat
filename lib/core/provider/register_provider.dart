@@ -22,6 +22,7 @@ class RegisterProvider extends ChangeNotifier {
     UserModel userModel = UserModel(
         uid: authRepsonse.data ?? "",
         username: username!,
+        myFollowers: [],
         email: email,
         password: password,
         profileImage: profileImage ?? '');
