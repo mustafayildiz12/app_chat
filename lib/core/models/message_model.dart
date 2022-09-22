@@ -6,7 +6,7 @@ class Message {
   bool seen;
   String senderUID;
   String id;
- // bool isImage;
+ String type;
  // bool isVideo;
  // bool isVoice;
   Message({
@@ -15,6 +15,7 @@ class Message {
     required this.seen,
     required this.senderUID,
     required this.id,
+    required this.type
    
   });
 
@@ -24,6 +25,7 @@ class Message {
     bool? seen,
     String? senderUID,
     String? id,
+    String? type,
   }) {
     return Message(
       message: message ?? this.message,
@@ -31,6 +33,7 @@ class Message {
       seen: seen ?? this.seen,
       senderUID: senderUID ?? this.senderUID,
       id: id ?? this.id,
+      type: type ?? this.type
    
     );
   }
@@ -55,6 +58,7 @@ class Message {
       seen: map['seen'] ?? false,
       senderUID: map['senderUID'] ?? '',
       id: map['id'] ?? '',
+      type: map['type'] ?? ''
      
     );
   }
@@ -65,18 +69,23 @@ class Message {
 
   @override
   String toString() {
-    return 'Message(message: $message, date: $date, seen: $seen, senderUID: $senderUID, id: $id)';
+    return 'Message(message: $message, date: $date, seen: $seen, senderUID: $senderUID, id: $id,type:$type)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Message && other.message == message && other.date == date && other.seen == seen && other.senderUID == senderUID && other.id == id;
+    return other is Message && other.message == message && 
+    other.date == date && other.seen == seen && 
+    other.senderUID == senderUID && other.type == type && other.id == id;
   }
 
   @override
   int get hashCode {
-    return message.hashCode ^ date.hashCode ^ seen.hashCode ^ senderUID.hashCode ^ id.hashCode;
+    return message.hashCode ^ date.hashCode ^
+     seen.hashCode ^ senderUID.hashCode ^
+     type.hashCode^
+      id.hashCode;
   }
 }

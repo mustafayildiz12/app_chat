@@ -30,6 +30,7 @@ class _ChatPageState extends State<ChatPage> {
   String imageUrl = '';
   String imagePath = '';
   bool isLoading = false;
+  final ValueNotifier<bool> isSendingImage = ValueNotifier(false);
 
   Future uploadFile(BuildContext context, String chatID) async {
     final file = File(pickedFile?.path ?? '');
@@ -146,11 +147,34 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                           ),
                           pickedFile != null
-                              ? Image.file(
-                                  pickedFile!,
-                                  height: Screen.width(context) * 50,
-                                  width: Screen.width(context) * 50,
-                                  fit: BoxFit.cover,
+                              ? Stack(
+                                  children: [
+                                    Image.file(
+                                      pickedFile!,
+                                      height: Screen.width(context) * 50,
+                                      width: Screen.width(context) * 50,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Positioned(
+                                        top: 1,
+                                        right: 3,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              pickedFile = null;
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Theme.of(context)
+                                                    .primaryColor),
+                                            child:
+                                                const Icon(Icons.close_sharp),
+                                          ),
+                                        ))
+                                  ],
                                 )
                               : const SizedBox()
                         ],
@@ -188,42 +212,54 @@ class _ChatPageState extends State<ChatPage> {
                             borderRadius: BorderRadius.circular(12))),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: IconButton(
-                      onPressed: () async {
-                        if (_chat.text.isNotEmpty) {
-                          await ChatService().sendMessage(context,
-                              chatUser: widget.getDetails,
-                              message: _chat.text,
-                              chatID:
-                                  '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
-                          _chat.clear();
-                        }
+                ValueListenableBuilder(
+                  valueListenable: isSendingImage,
+                  builder: (context, value, child) {
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: IconButton(
+                          onPressed: () async {
+                            if (_chat.text.isNotEmpty) {
+                              await ChatService().sendMessage(context,
+                                  chatUser: widget.getDetails,
+                                  message: _chat.text,
+                                  type: 'text',
+                                  chatID:
+                                      '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
+                              _chat.clear();
+                            }
 
-                        if (pickedFile != null) {
-                          imagePath =
-                              'images/${userProvider.usermodel!.email}/chatImages/${userProvider.usermodel!.uid}${widget.getDetails.uid}/${DateTime.now().millisecondsSinceEpoch}.png';
-                          await uploadFile(context,
-                              '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
-                          setState(() {
-                            isLoading = false;
-                            pickedFile = null;
-                          });
-                          await ChatService().sendMessage(context,
-                              chatUser: widget.getDetails,
-                              message: imageUrl,
-                              chatID:
+                            if (pickedFile != null) {
+                              isSendingImage.value = true;
+                              imagePath =
+                                  'images/${userProvider.usermodel!.email}/chatImages/${userProvider.usermodel!.uid}${widget.getDetails.uid}/${DateTime.now().millisecondsSinceEpoch}.png';
+                              // ignore: use_build_context_synchronously
+                              await uploadFile(context,
                                   '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
-                          print(2.3);
-                          
-                        }
-                      },
-                      icon: const Icon(Icons.send_sharp),
-                    ),
-                  ),
+                              setState(() {
+                                isLoading = false;
+                                pickedFile = null;
+                              });
+                              // ignore: use_build_context_synchronously
+                              await ChatService().sendMessage(context,
+                                  chatUser: widget.getDetails,
+                                  message: imageUrl,
+                                  type: 'image',
+                                  chatID:
+                                      '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
+                              print(2.3);
+                              isSendingImage.value = false;
+                            }
+                          },
+                          icon: isSendingImage.value
+                              ? const CircularProgressIndicator()
+                              : const Icon(Icons.send_sharp),
+                        ),
+                      ),
+                    );
+                  },
                 )
               ],
             ),

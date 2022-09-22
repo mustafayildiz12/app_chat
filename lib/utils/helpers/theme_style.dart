@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
     return ThemeData(
       primarySwatch: Colors.red,
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
+      shadowColor: isDarkTheme ? Colors.grey : Colors.black,
 
       backgroundColor: isDarkTheme ? Colors.black : const Color(0xffF1F5FB),
 

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:app_chat/core/service/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/message_model.dart';
@@ -48,9 +49,7 @@ class MessagesList extends StatelessWidget {
                 Map<String, dynamic> messageMap = {
                   'message': messageHashMap['message'],
                   'date': messageHashMap['date'],
-                  //    'isImage': messageHashMap['isImage'] ?? false,
-                  //    'isVideo': messageHashMap['isVideo'] ?? false,
-                  //    'isVoice': messageHashMap['isVoice'] ?? false,
+                  'type': messageHashMap['type'],
                   'senderUID': messageHashMap['senderUID'],
                   'seen': messageHashMap['seen'],
                   'id': messageHashMap['id'],
@@ -70,38 +69,37 @@ class MessagesList extends StatelessWidget {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
-                      message.message.contains('.png')
-                          ? Container(
-                              padding: const EdgeInsets.all(8.0),
-                              margin: EdgeInsets.only(
-                                  left: sendedByMe ? 50 : 0,
-                                  right: sendedByMe ? 0 : 50,
-                                  bottom: 8),
-                              decoration: BoxDecoration(
-                                  color: sendedByMe
-                                      ? Theme.of(context).errorColor
-                                      : Theme.of(context).hintColor,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Image.network(
-                                message.message,
-                              ),
-                            )
-                          : Container(
-                              padding: const EdgeInsets.all(8.0),
-                              margin: EdgeInsets.only(
-                                  left: sendedByMe ? 50 : 0,
-                                  right: sendedByMe ? 0 : 50,
-                                  bottom: 8),
-                              decoration: BoxDecoration(
-                                  color: sendedByMe
-                                      ? Theme.of(context).errorColor
-                                      : Theme.of(context).hintColor,
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Text(
-                                message.message,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ),
+                      Container(
+                          padding: const EdgeInsets.all(8.0),
+                          margin: EdgeInsets.only(
+                              left: sendedByMe ? 50 : 0,
+                              right: sendedByMe ? 0 : 50,
+                              bottom: 8),
+                          decoration: BoxDecoration(
+                              color: sendedByMe
+                                  ? Theme.of(context).errorColor
+                                  : Theme.of(context).hintColor,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: message.type == 'image'
+                              ? Image.network(
+                                  message.message,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    final totalBytes =
+                                        loadingProgress?.expectedTotalBytes;
+                                    final bytesLoaded =
+                                        loadingProgress?.cumulativeBytesLoaded;
+                                    if (totalBytes != null &&
+                                        bytesLoaded != null) {
+                                      return const CupertinoActivityIndicator(
+                                          //  value: bytesLoaded / totalBytes,
+                                          );
+                                    } else {
+                                      return child;
+                                    }
+                                  },
+                                )
+                              : Text(message.message)),
                       Row(
                         mainAxisAlignment: sendedByMe
                             ? MainAxisAlignment.end
@@ -110,7 +108,7 @@ class MessagesList extends StatelessWidget {
                           Text(
                             '${myDate.hour}:${myDate.minute}',
                             style: TextStyle(
-                              color: Colors.black.withOpacity(0.4),
+                              color: Theme.of(context).shadowColor,
                               fontSize: 12,
                             ),
                           ),

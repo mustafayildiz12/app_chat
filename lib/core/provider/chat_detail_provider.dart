@@ -28,7 +28,9 @@ class ChatDetailProvider extends ChangeNotifier {
   }
 
   void scrollToBottom() {
-    if (scrollController.positions.isNotEmpty) scrollController.jumpTo(scrollController.position.minScrollExtent);
+    if (scrollController.positions.isNotEmpty) {
+      scrollController.jumpTo(scrollController.position.minScrollExtent);
+    }
   }
 
 /*
@@ -41,23 +43,24 @@ class ChatDetailProvider extends ChangeNotifier {
 
   Future<void> sendMessage(
     BuildContext context, {
-   required String chatID,
+    required String chatID,
     required UserModel chatUser,
     required String message,
     required void Function(String) onNewChatID,
-    bool isImage = false,
-    bool isVideo = false,
-  //  bool isVoice = false,
+    required String type,
+
+    //  bool isVoice = false,
   }) async {
     controller.clear();
-    await ChatService().sendMessage(context,
-        chatUser: chatUser,
-        message: message,
-       // onNewChatID: onNewChatID,
-        chatID: chatID,
-        isImage: isImage,
-        isVideo: isVideo,
-       // isVoice: is
+    await ChatService().sendMessage(
+      context,
+      chatUser: chatUser,
+      message: message,
+      type: type,
+      // onNewChatID: onNewChatID,
+      chatID: chatID,
+
+      // isVoice: is
       //  isVoice: isVoice);
     );
     const Duration(milliseconds: 300);

@@ -15,8 +15,7 @@ class ChatService {
     required UserModel chatUser,
     required String message,
     //   required void Function(String chatID) onNewChatID,
-    bool isImage = false,
-    bool isVideo = false,
+   required String type,
     //   bool isVoice = false,
   }) async {
     UserModel userModel =
@@ -76,8 +75,8 @@ class ChatService {
       'senderUID': userModel.uid,
       'seen': false,
       'id': id,
-      'isImage': isImage,
-      'isVideo': isVideo,
+      'type': type,
+      
     });
 
     await database
@@ -91,8 +90,8 @@ class ChatService {
       'senderUID': userModel.uid,
       'seen': false,
       'id': id,
-      'isImage': isImage,
-      'isVideo': isVideo,
+      'type': type,
+      
     });
 
     //  UserModel? userModel = await DatabaseService().getUser(chatUser.uid);
