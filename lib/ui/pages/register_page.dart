@@ -6,10 +6,7 @@ import 'package:provider/provider.dart';
 import '../../core/provider/register_provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  final PageController pageController;
-
-  const RegisterPage({required this.pageController, Key? key})
-      : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -36,6 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: TextFormField(
+                      initialValue: registerProvider.username,
                       onChanged: (v) {
                         registerProvider.username = v;
                         registerProvider.notify();
@@ -75,6 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: TextFormField(
+                            initialValue: registerProvider.email,
                             onChanged: (v) {
                               registerProvider.email = v;
                               registerProvider.notify();
@@ -88,6 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: TextFormField(
+                            
                             onChanged: (v) {
                               registerProvider.password = v;
                               registerProvider.notify();
@@ -120,15 +120,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                 }
                               },
                               child: isRegistering.value
-                                  ?  CircularProgressIndicator(
-                                    color: Theme.of(context).indicatorColor,
-                                  )
+                                  ? CircularProgressIndicator(
+                                      color: Theme.of(context).indicatorColor,
+                                    )
                                   : const Text("Register"),
                             );
                           },
                         )
                       ],
                     ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      registerProvider.isLoginPage = true;
+                      registerProvider.notify();
+                    },
+                    child: const Text("Already Have Account"),
                   ),
                   SizedBox(
                     height: Screen.height(context) * 4,

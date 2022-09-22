@@ -12,6 +12,7 @@ class RegisterProvider extends ChangeNotifier {
   String? email;
   String? password;
   String? profileImage;
+  bool isLoginPage = false;
 
   Future<void> registerWithProvider(
       String email, String password, BuildContext? context) async {
