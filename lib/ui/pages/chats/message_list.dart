@@ -1,12 +1,14 @@
 import 'dart:collection';
 
 import 'package:app_chat/core/service/database_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/message_model.dart';
 import '../../../core/models/user_model.dart';
+import '../../../utils/helpers/custom_audio_player.dart';
 
 class MessagesList extends StatelessWidget {
   const MessagesList({
@@ -98,7 +100,8 @@ class MessagesList extends StatelessWidget {
                                       return child;
                                     }
                                   },
-                                )
+                                ) : message.type == 'voice' ?
+                                VoiceMessage(message: message)
                               : Text(message.message)),
                       Row(
                         mainAxisAlignment: sendedByMe
@@ -134,5 +137,38 @@ class MessagesList extends StatelessWidget {
         return const Text('');
       },
     );
+  }
+}
+
+
+class VoiceMessage extends StatefulWidget {
+  const VoiceMessage({Key? key, required this.message}) : super(key: key);
+  final Message message;
+
+  @override
+  State<VoiceMessage> createState() => _VoiceMessageState(message);
+}
+
+class _VoiceMessageState extends State<VoiceMessage> {
+  _VoiceMessageState(this.message);
+
+  final Message message;
+
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    initAudioPlayer();
+  }
+
+  void initAudioPlayer() {
+    audioPlayer.setSourceUrl(message.message);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('message.message  ${message.message}');
+    return CustomAudioPlayerWidget(url: message.message);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/models/user_model.dart';
+import 'package:app_chat/core/provider/chat_detail_provider.dart';
 import 'package:app_chat/core/service/chat_service.dart';
 import 'package:app_chat/ui/pages/chats/message_list.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -10,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/provider/user_provider.dart';
+import '../../../core/provider/voice_record_provider.dart';
 import '../../../core/service/database_service.dart';
+import '../../../core/service/storage_service.dart';
 import '../../../utils/helpers/my_image_picker.dart';
 
 class ChatPage extends StatefulWidget {
@@ -30,7 +33,22 @@ class _ChatPageState extends State<ChatPage> {
   String imageUrl = '';
   String imagePath = '';
   bool isLoading = false;
+
   final ValueNotifier<bool> isSendingImage = ValueNotifier(false);
+
+  @override
+  void initState() {
+    super.initState();
+
+    voiceRecorderInit();
+    //  getData();
+  }
+
+  void voiceRecorderInit() {
+    VoiceRecordProvider voiceRecordProvider =
+        Provider.of<VoiceRecordProvider>(context, listen: false);
+    voiceRecordProvider.init();
+  }
 
   Future uploadFile(BuildContext context, String chatID) async {
     final file = File(pickedFile?.path ?? '');
@@ -71,9 +89,17 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
+    VoiceRecordProvider voiceRecordProvider =
+        Provider.of<VoiceRecordProvider>(context);
+    ChatDetailProvider chatDetailProvider =
+        Provider.of<ChatDetailProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.getDetails.username),
+        title: GestureDetector(
+            onTap: () {
+              print(voiceRecordProvider.codec);
+            },
+            child: Text(widget.getDetails.username)),
         leading: widget.getDetails.profileImage != ""
             ? Padding(
                 padding: const EdgeInsets.all(4.0),
@@ -191,6 +217,87 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
+          if (chatDetailProvider.showVoiceRecord)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 4),
+                  GestureDetector(
+                    onTap: () {
+                      chatDetailProvider.showVoiceRecord =
+                          !chatDetailProvider.showVoiceRecord;
+                      chatDetailProvider.notify();
+                    },
+                    child: const Icon(Icons.close),
+                  ),
+                  Expanded(
+                      child: Container(
+                    color: Colors.pink,
+                    child: Center(
+                      child: Text(voiceRecordProvider.recorderTxt),
+                    ),
+                  )),
+                  GestureDetector(
+                    onTap: () async {
+                      if (voiceRecordProvider.recordingEnded) {
+                        String? audioFilePath;
+                        var codec = voiceRecordProvider.codec;
+                        if (await voiceRecordProvider.fileExists(
+                            voiceRecordProvider.path[codec.index]!)) {
+                          audioFilePath = voiceRecordProvider.path[codec.index];
+                          print('audioFilePath: $audioFilePath');
+                          File recordFile = File(audioFilePath!);
+                          String voicePath = await StorageService()
+                              .sendVoiceRecord(
+                                  uid: userProvider.usermodel!.uid,
+                                  recordFile: recordFile);
+                          print('voicePath: $voicePath');
+                          // ignore: use_build_context_synchronously
+                          await ChatService().sendMessage(context,
+                              message: voicePath,
+                              chatID:
+                                  '${userProvider.usermodel!.uid}${widget.getDetails.uid}',
+                              chatUser: widget.getDetails,
+                              type: 'voice');
+                        }
+                        chatDetailProvider.showVoiceRecord =
+                            !chatDetailProvider.showVoiceRecord;
+                        voiceRecordProvider.isRecording = false;
+                        voiceRecordProvider.recordingEnded = false;
+                        voiceRecordProvider.recorderTxt = '00:00';
+
+                        chatDetailProvider.notify();
+                      } else {
+                        if (voiceRecordProvider.isRecording) {
+                          await voiceRecordProvider.stopRecorder();
+                        } else {
+                          await voiceRecordProvider.startRecorder();
+                        }
+                      }
+                    },
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.blue,
+                      child: Icon(
+                        voiceRecordProvider.recordingEnded
+                            ? Icons.send
+                            : voiceRecordProvider.isRecording
+                                ? Icons.stop
+                                : Icons.mic_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -199,6 +306,14 @@ class _ChatPageState extends State<ChatPage> {
                   child: TextFormField(
                     controller: _chat,
                     decoration: InputDecoration(
+                        prefixIcon: GestureDetector(
+                          onTap: () {
+                            chatDetailProvider.showVoiceRecord =
+                                !chatDetailProvider.showVoiceRecord;
+                            chatDetailProvider.notify();
+                          },
+                          child: const Icon(Icons.voice_over_off),
+                        ),
                         suffixIcon: IconButton(
                           onPressed: () async {
                             selectImage();

@@ -33,13 +33,31 @@ class ChatDetailProvider extends ChangeNotifier {
     }
   }
 
-/*
-  Future<void> removeAnonym(String chatID) async {
-    await DatabaseService().removeAnonym(chatID);
+  void toggleRecording() {
+    if (recordingStarted) {
+      endRecording();
+    } else {
+      startRecording();
+    }
+    notifyListeners();
   }
 
-  
- */
+  Future<void> startRecording() async {
+    recordingStarted = true;
+    showTextfield = false;
+    await Future.delayed(const Duration(milliseconds: 100));
+    showRecordingButtons = true;
+    notifyListeners();
+  }
+
+  Future<void> endRecording() async {
+    recordingStarted = false;
+    showRecordingButtons = false;
+    await Future.delayed(const Duration(milliseconds: 300));
+    showTextfield = true;
+    notifyListeners();
+  }
+
 
   Future<void> sendMessage(
     BuildContext context, {

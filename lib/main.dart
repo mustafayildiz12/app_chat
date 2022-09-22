@@ -1,6 +1,8 @@
+import 'package:app_chat/core/provider/chat_detail_provider.dart';
 import 'package:app_chat/core/provider/register_provider.dart';
 import 'package:app_chat/core/provider/splash_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
+import 'package:app_chat/core/provider/voice_record_provider.dart';
 import 'package:app_chat/ui/pages/splash.dart';
 import 'package:app_chat/utils/helpers/theme_style.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,8 +47,10 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => themeChangeProvider),
         ChangeNotifierProvider(create: (context) => SplashProvider()),
+        ChangeNotifierProvider(create: (context) => VoiceRecordProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ChatDetailProvider()),
       ],
       child: Consumer<DarkThemeProvider>(
         builder: (context, value, child) {

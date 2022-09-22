@@ -2,6 +2,9 @@
     package="com.example.app_chat">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<!-- Optional, you'll have to check this permission by yourself. -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <application
         android:label="app_chat"
         android:name="${applicationName}"
