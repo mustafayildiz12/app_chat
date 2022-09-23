@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/message_model.dart';
 import '../service/chat_service.dart';
 import '../service/database_service.dart';
 
@@ -12,7 +13,7 @@ class ChatDetailProvider extends ChangeNotifier {
   TextEditingController controller = TextEditingController();
   ScrollController scrollController = ScrollController();
 
-//  List<Message> readedMessages = [];
+  List<Message> readedMessages = [];
 
   File? imageToUpload;
 
@@ -58,7 +59,6 @@ class ChatDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> sendMessage(
     BuildContext context, {
     required String chatID,
@@ -88,13 +88,11 @@ class ChatDetailProvider extends ChangeNotifier {
     }
   }
 
-/*
   Future<void> setSeen(Message message, String chatID) async {
     message.seen = true;
     await DatabaseService().setSeen(message, chatID);
     readedMessages.add(message);
   }
- */
 
 /*
   void toggleRecording() {

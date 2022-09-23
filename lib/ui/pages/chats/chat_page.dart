@@ -95,11 +95,7 @@ class _ChatPageState extends State<ChatPage> {
         Provider.of<ChatDetailProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: GestureDetector(
-            onTap: () {
-              print(voiceRecordProvider.codec);
-            },
-            child: Text(widget.getDetails.username)),
+        title: Text(widget.getDetails.username),
         leading: widget.getDetails.profileImage != ""
             ? Padding(
                 padding: const EdgeInsets.all(4.0),
@@ -164,11 +160,15 @@ class _ChatPageState extends State<ChatPage> {
                     if (data != null) {
                       Map dataMap = data as Map;
                       final chatID = dataMap['chatID'];
+                      final sawMessageId =
+                          '${widget.getDetails.uid}${userProvider.usermodel!.uid}';
                       return Column(
                         children: [
                           Expanded(
                             child: MessagesList(
+                              sawMessageId: sawMessageId,
                               chatID: chatID,
+                              chatDetailProvider: chatDetailProvider,
                               myUser: userProvider.usermodel!,
                             ),
                           ),

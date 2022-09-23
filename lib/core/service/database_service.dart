@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../models/message_model.dart';
 import '../models/user_model.dart';
 import '../repostiroy/user_repository.dart';
 
@@ -129,9 +130,9 @@ class DatabaseService {
   }
  */
 
-  /*
+  
   Future<void> setSeen(Message message, String chatID) async {
-    await firebaseDatabase.ref('chats').child('${chatID}').child('messages').child(message.id).update({
+    await firebaseDatabase.ref('chats').child(chatID).child('messages').child(message.id).update({
       'seen': true,
     });
   }
@@ -157,6 +158,8 @@ class DatabaseService {
   Stream<DatabaseEvent> userStream(String uid) {
     return firebaseDatabase.ref().child('users').child(uid).onValue;
   }
+
+  /*
 
   Future<void> sendAdvice(String advice, UserModel user) async {
     await firebaseDatabase.ref().child('advices').push().set({

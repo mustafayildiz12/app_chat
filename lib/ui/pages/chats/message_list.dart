@@ -8,16 +8,21 @@ import 'package:flutter/material.dart';
 
 import '../../../core/models/message_model.dart';
 import '../../../core/models/user_model.dart';
+import '../../../core/provider/chat_detail_provider.dart';
 import '../../../utils/helpers/custom_audio_player.dart';
 
 class MessagesList extends StatelessWidget {
   const MessagesList({
     Key? key,
+    required this.chatDetailProvider,
     required this.chatID,
     required this.myUser,
+    required this.sawMessageId,
   }) : super(key: key);
 
   final String chatID;
+  final String sawMessageId;
+  final ChatDetailProvider chatDetailProvider;
   final UserModel myUser;
 
   @override
@@ -63,6 +68,11 @@ class MessagesList extends StatelessWidget {
 
                 final myDate = DateTime.parse(message.date);
 
+                if (!sendedByMe &&
+                    !chatDetailProvider.readedMessages.contains(message)) {
+                  chatDetailProvider.setSeen(message, sawMessageId);
+                }
+
                 return Align(
                   alignment:
                       sendedByMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -100,9 +110,10 @@ class MessagesList extends StatelessWidget {
                                       return child;
                                     }
                                   },
-                                ) : message.type == 'voice' ?
-                                VoiceMessage(message: message)
-                              : Text(message.message)),
+                                )
+                              : message.type == 'voice'
+                                  ? VoiceMessage(message: message)
+                                  : Text(message.message)),
                       Row(
                         mainAxisAlignment: sendedByMe
                             ? MainAxisAlignment.end
@@ -139,7 +150,6 @@ class MessagesList extends StatelessWidget {
     );
   }
 }
-
 
 class VoiceMessage extends StatefulWidget {
   const VoiceMessage({Key? key, required this.message}) : super(key: key);
