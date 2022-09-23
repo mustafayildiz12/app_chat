@@ -8,8 +8,9 @@ class UserModel {
 
   String email;
   String? profileImage;
-  final List myFollowers;
+  List myFollowers;
   String password;
+  List myCollection = List.empty(growable: true);
 
   UserModel(
       {required this.uid,
@@ -17,6 +18,7 @@ class UserModel {
       required this.email,
       required this.password,
       required this.myFollowers,
+      required this.myCollection,
       this.profileImage});
 
   UserModel copyWith(
@@ -24,7 +26,8 @@ class UserModel {
       String? username,
       String? email,
       String? password,
-       List? myFollowers,
+      List? myFollowers,
+      List? myCollection,
       String? profileImage}) {
     return UserModel(
         uid: uid ?? this.uid,
@@ -32,6 +35,7 @@ class UserModel {
         myFollowers: myFollowers ?? this.myFollowers,
         email: email ?? this.email,
         password: password ?? this.password,
+        myCollection: myCollection ?? this.myCollection,
         profileImage: profileImage ?? this.profileImage);
   }
 
@@ -46,17 +50,19 @@ class UserModel {
     result.addAll({'password': password});
     result.addAll({'profileImage': profileImage});
     result.addAll({'myFollowers': myFollowers});
+    result.addAll({'myCollection': myCollection});
 
     return result;
   }
 
   factory UserModel.fromMap(Map<dynamic, dynamic> map) {
     return UserModel(
-      myFollowers: map['myFollowers'] ?? [],
+        myFollowers: map['myFollowers'] ?? [],
         uid: map['uid'] ?? '',
         username: map['username'] ?? '',
         email: map['email'] ?? '',
         password: map['password'] ?? '',
+        myCollection: map['myCollection'] ?? [],
         profileImage: map['profileImage'] ?? '');
   }
 
@@ -65,7 +71,6 @@ class UserModel {
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source));
 
- 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -76,6 +81,7 @@ class UserModel {
         other.email == email &&
         other.profileImage == profileImage &&
         listEquals(other.myFollowers, myFollowers) &&
+        //    listEquals(other.myCollection, myCollection) &&
         other.password == password;
   }
 
@@ -86,6 +92,7 @@ class UserModel {
         email.hashCode ^
         myFollowers.hashCode ^
         profileImage.hashCode ^
+        //    myCollection.hashCode ^
         password.hashCode;
   }
 }

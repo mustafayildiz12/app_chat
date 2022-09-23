@@ -23,6 +23,7 @@ class RegisterProvider extends ChangeNotifier {
         uid: uid ?? 'zaza',
         username: username!,
         myFollowers: [],
+        myCollection: List.empty(growable: true),
         email: email,
         password: password,
         profileImage: profileImage ?? '');

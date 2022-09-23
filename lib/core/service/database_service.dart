@@ -130,14 +130,18 @@ class DatabaseService {
   }
  */
 
-  
   Future<void> setSeen(Message message, String chatID) async {
-    await firebaseDatabase.ref('chats').child(chatID).child('messages').child(message.id).update({
+    await firebaseDatabase
+        .ref('chats')
+        .child(chatID)
+        .child('messages')
+        .child(message.id)
+        .update({
       'seen': true,
     });
   }
 
-  Future<void> removeAnonym(String chatID) async {
+  /*Future<void> removeAnonym(String chatID) async {
     await firebaseDatabase.ref('chats').child(chatID).update({
       'anonym': false,
     });
@@ -159,7 +163,6 @@ class DatabaseService {
     return firebaseDatabase.ref().child('users').child(uid).onValue;
   }
 
-  /*
 
   Future<void> sendAdvice(String advice, UserModel user) async {
     await firebaseDatabase.ref().child('advices').push().set({

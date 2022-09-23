@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/provider/theme_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
+import 'package:app_chat/ui/pages/bottoms/profile_page/user_image_collection.dart';
 import 'package:app_chat/ui/product/loading_button.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -120,6 +123,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               }),
                         ],
                       ),
+                    ),
+                    PopupMenuItem(
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UserImageCollection()));
+                          },
+                          child: const Text('My Collection')),
                     )
                   ])
         ],
@@ -221,7 +235,38 @@ class _ProfilePageState extends State<ProfilePage> {
                       }
                     },
                     title: "Save"),
+              ),
+             
+              if(userProvider.usermodel!.myCollection.isNotEmpty)
+              CarouselSlider.builder(
+                itemCount: userProvider.usermodel!.myCollection.length,
+                options: CarouselOptions(autoPlay: true),
+                itemBuilder:
+                    (BuildContext context, int itemIndex, int pageViewIndex) =>
+                        SizedBox(
+                  height: Screen.height(context) * 25,
+                  child: Image.network(
+                    userProvider.usermodel!.myCollection[itemIndex],
+                    fit: BoxFit.fitHeight,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      final totalBytes = loadingProgress?.expectedTotalBytes;
+                      final bytesLoaded =
+                          loadingProgress?.cumulativeBytesLoaded;
+                      if (totalBytes != null && bytesLoaded != null) {
+                        return const CupertinoActivityIndicator(
+                            //  value: bytesLoaded / totalBytes,
+                            );
+                      } else {
+                        return child;
+                      }
+                    },
+                  ),
+                ),
               )
+              else
+               const Text(
+                'Your Collection is empty'
+              ),
             ],
           ),
         ),
