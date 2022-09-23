@@ -131,6 +131,7 @@ class MessagesList extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 4),
                               child: Icon(
                                 Icons.done_all,
+                                size: 18,
                                 color: message.seen ? Colors.blue : Colors.grey,
                               ),
                             ),
@@ -156,14 +157,10 @@ class VoiceMessage extends StatefulWidget {
   final Message message;
 
   @override
-  State<VoiceMessage> createState() => _VoiceMessageState(message);
+  State<VoiceMessage> createState() => _VoiceMessageState();
 }
 
 class _VoiceMessageState extends State<VoiceMessage> {
-  _VoiceMessageState(this.message);
-
-  final Message message;
-
   AudioPlayer audioPlayer = AudioPlayer();
 
   @override
@@ -173,12 +170,12 @@ class _VoiceMessageState extends State<VoiceMessage> {
   }
 
   void initAudioPlayer() {
-    audioPlayer.setSourceUrl(message.message);
+    audioPlayer.setSourceUrl(widget.message.message);
   }
 
   @override
   Widget build(BuildContext context) {
-    print('message.message  ${message.message}');
-    return CustomAudioPlayerWidget(url: message.message);
+    print('message.message  ${widget.message.message}');
+    return CustomAudioPlayerWidget(url: widget.message.message);
   }
 }
