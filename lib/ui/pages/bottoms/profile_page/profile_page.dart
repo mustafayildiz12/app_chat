@@ -211,9 +211,23 @@ class _ProfilePageState extends State<ProfilePage> {
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                 child: Card(
                   child: ListTile(
+                    onTap: (){
+                      
+                    },
                     subtitle: Text(
                         userProvider.usermodel!.myFollowers.length.toString()),
                     title: const Text("Takip Edilen Kişi Sayısı"),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                child: Card(
+                  child: ListTile(
+                    subtitle: Text(
+                        userProvider.usermodel!.myCollection.length.toString()),
+                    title: const Text("Koleksiyon Syısı"),
                   ),
                 ),
               ),
@@ -236,37 +250,34 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     title: "Save"),
               ),
-             
-              if(userProvider.usermodel!.myCollection.isNotEmpty)
-              CarouselSlider.builder(
-                itemCount: userProvider.usermodel!.myCollection.length,
-                options: CarouselOptions(autoPlay: true),
-                itemBuilder:
-                    (BuildContext context, int itemIndex, int pageViewIndex) =>
-                        SizedBox(
-                  height: Screen.height(context) * 25,
-                  child: Image.network(
-                    userProvider.usermodel!.myCollection[itemIndex],
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      final totalBytes = loadingProgress?.expectedTotalBytes;
-                      final bytesLoaded =
-                          loadingProgress?.cumulativeBytesLoaded;
-                      if (totalBytes != null && bytesLoaded != null) {
-                        return const CupertinoActivityIndicator(
-                            //  value: bytesLoaded / totalBytes,
-                            );
-                      } else {
-                        return child;
-                      }
-                    },
+              if (userProvider.usermodel!.myCollection.isNotEmpty)
+                CarouselSlider.builder(
+                  itemCount: userProvider.usermodel!.myCollection.length,
+                  options: CarouselOptions(autoPlay: true),
+                  itemBuilder: (BuildContext context, int itemIndex,
+                          int pageViewIndex) =>
+                      SizedBox(
+                    height: Screen.height(context) * 25,
+                    child: Image.network(
+                      userProvider.usermodel!.myCollection[itemIndex],
+                      fit: BoxFit.fitHeight,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        final totalBytes = loadingProgress?.expectedTotalBytes;
+                        final bytesLoaded =
+                            loadingProgress?.cumulativeBytesLoaded;
+                        if (totalBytes != null && bytesLoaded != null) {
+                          return const CupertinoActivityIndicator(
+                              //  value: bytesLoaded / totalBytes,
+                              );
+                        } else {
+                          return child;
+                        }
+                      },
+                    ),
                   ),
-                ),
-              )
+                )
               else
-               const Text(
-                'Your Collection is empty'
-              ),
+                const Text('Your Collection is empty'),
             ],
           ),
         ),

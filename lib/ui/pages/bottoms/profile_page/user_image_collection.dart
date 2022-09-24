@@ -93,14 +93,15 @@ class _UserImageCollectionState extends State<UserImageCollection> {
                   isLoaded = !isLoaded;
                   for (int i = 0; i < imageFileList!.length; i++) {
                     imagePath =
-                        'images/${userProvider.usermodel!.email}/collection/$i.png';
-                    userProvider.notify();
+                        'images/${userProvider.usermodel!.email}/collection/${userProvider.usermodel!.uid}/$i.png';
+
                     await uploadFile(imageFileList![i].path);
                     userProvider.usermodel!.myCollection.add(imageUrl);
+                    userProvider.notify();
 
-                    await ref.set({
+                    await ref.update({
                       "myCollection": userProvider.usermodel!.myCollection,
-                    });
+                    }).then((value) {});
                   }
 
                   userProvider.notify();
@@ -115,12 +116,13 @@ class _UserImageCollectionState extends State<UserImageCollection> {
                     userProvider.notify();
 
                     isLoaded = !isLoaded;
-                    setState(() {
-                      imageFileList = [];
-                    });
+                   
                   }
                    */
                   // ignore: use_build_context_synchronously
+                  setState(() {
+                    imageFileList = [];
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("Images successfully uploaded"),
                   ));
