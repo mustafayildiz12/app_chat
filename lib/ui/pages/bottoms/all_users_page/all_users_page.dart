@@ -71,6 +71,13 @@ class _AllUsersPageState extends State<AllUsersPage> {
       ),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              "All Users",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
           Expanded(
             child: FutureBuilder<DataSnapshot>(
                 future: FirebaseDatabase.instance
@@ -113,7 +120,6 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                   MaterialPageRoute(
                                     builder: (context) => ChatPage(
                                       getDetails: data,
-                                    
                                     ),
                                   ),
                                 );
@@ -140,10 +146,7 @@ class _AllUsersPageState extends State<AllUsersPage> {
                 }),
           ),
           if (showBottomLoading) ...[
-            Center(
-                child: Container(
-                    decoration: const BoxDecoration(color: Colors.transparent),
-                    child: const CircularProgressIndicator())),
+            const Center(child: CircularProgressIndicator()),
           ],
         ],
       ),

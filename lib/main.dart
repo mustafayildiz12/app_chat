@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'core/provider/bottom_navigation_provider.dart';
 import 'core/provider/theme_provider.dart';
 import 'firebase_options.dart';
 
@@ -55,6 +56,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => UploadImageProvider()),
         ChangeNotifierProvider(create: (context) => ChatDetailProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => BottomNavigationProvider()),
       ],
       child: Consumer<DarkThemeProvider>(
         builder: (context, value, child) {

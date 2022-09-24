@@ -1,38 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'all_users_page/all_users_page.dart';
-import 'profile_page/profile_page.dart';
+import '../../../core/provider/bottom_navigation_provider.dart';
 
-class BottomPage extends StatefulWidget {
+class BottomPage extends StatelessWidget {
   const BottomPage({Key? key}) : super(key: key);
 
   @override
-  State<BottomPage> createState() => _BottomPageState();
-}
-
-class _BottomPageState extends State<BottomPage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-    ),
-    AllUsersPage(),
-    ProfilePage(),
-  ];
-  @override
   Widget build(BuildContext context) {
+    BottomNavigationProvider bottomNavigationProvider =
+        Provider.of<BottomNavigationProvider>(context);
     return Scaffold(
-      body: Center(child: _widgetOptions[_selectedIndex]),
+      body: Center(
+          child: bottomNavigationProvider
+              .widgetOptions[bottomNavigationProvider.selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
+        onTap: bottomNavigationProvider.onItemTapped,
+        currentIndex: bottomNavigationProvider.selectedIndex,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.money_sharp), label: "Premium"),
