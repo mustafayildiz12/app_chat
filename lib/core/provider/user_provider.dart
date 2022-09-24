@@ -12,6 +12,7 @@ import '../repostiroy/user_repository.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel? usermodel;
+  
 
   Future<void> initUser(context) async {
     User? currentUser = UserService().getCurrentUser();
@@ -50,7 +51,7 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
- /*
+  /*
   Future<void> getUser(
       String verificationId, String pass, BuildContext context) async {
     await UserService().verifyOtpLogin(

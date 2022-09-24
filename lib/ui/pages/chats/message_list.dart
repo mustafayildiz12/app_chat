@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/service/database_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -93,24 +94,29 @@ class MessagesList extends StatelessWidget {
                                   : Theme.of(context).hintColor,
                               borderRadius: BorderRadius.circular(12)),
                           child: message.type == 'image'
-                              ? Image.network(
-                                  message.message,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    final totalBytes =
-                                        loadingProgress?.expectedTotalBytes;
-                                    final bytesLoaded =
-                                        loadingProgress?.cumulativeBytesLoaded;
-                                    if (totalBytes != null &&
-                                        bytesLoaded != null) {
-                                      return const CupertinoActivityIndicator(
-                                          //  value: bytesLoaded / totalBytes,
-                                          );
-                                    } else {
-                                      return child;
-                                    }
-                                  },
-                                )
+                              ? SizedBox(
+                                
+                                height: Screen.height(context)*40,
+                                child: Image.network(
+                                    message.message,
+                                    fit: BoxFit.fill,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      final totalBytes =
+                                          loadingProgress?.expectedTotalBytes;
+                                      final bytesLoaded =
+                                          loadingProgress?.cumulativeBytesLoaded;
+                                      if (totalBytes != null &&
+                                          bytesLoaded != null) {
+                                        return const CupertinoActivityIndicator(
+                                            //  value: bytesLoaded / totalBytes,
+                                            );
+                                      } else {
+                                        return child;
+                                      }
+                                    },
+                                  ),
+                              )
                               : message.type == 'voice'
                                   ? VoiceMessage(message: message)
                                   : Text(message.message)),

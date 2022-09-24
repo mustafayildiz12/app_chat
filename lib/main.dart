@@ -1,4 +1,5 @@
 import 'package:app_chat/core/provider/chat_detail_provider.dart';
+import 'package:app_chat/core/provider/image_provider.dart';
 import 'package:app_chat/core/provider/register_provider.dart';
 import 'package:app_chat/core/provider/splash_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => VoiceRecordProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => UploadImageProvider()),
         ChangeNotifierProvider(create: (context) => ChatDetailProvider()),
       ],
       child: Consumer<DarkThemeProvider>(
