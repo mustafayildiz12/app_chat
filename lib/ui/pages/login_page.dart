@@ -1,39 +1,32 @@
-import 'package:app_chat/core/repostiroy/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/class/screen_class.dart';
-import '../../core/provider/register_provider.dart';
-import '../../core/provider/user_provider.dart';
+import '../../core/provider/auth_provider.dart';
+import '../../core/repostiroy/user_repository.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  const LoginPage({ Key? key}) : super(key: key);
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  bool isLoading = false;
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _pasword = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = Provider.of<UserProvider>(context);
-    RegisterProvider registerProvider = Provider.of<RegisterProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            color: Colors.pink, borderRadius: BorderRadius.circular(12)),
+            color: Colors.teal, borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                controller: _email,
+                initialValue: authProvider.email,
+                onChanged: (v) {
+                  authProvider.email = v;
+                  authProvider.notify();
+                },
                 decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.email),
                     labelText: "Email",
@@ -43,7 +36,10 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
-                controller: _pasword,
+                onChanged: (v) {
+                  authProvider.password = v;
+                  authProvider.notify();
+                },
                 obscureText: true,
                 decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.lock),
@@ -53,27 +49,24 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton(
                 onPressed: () async {
-                  if (_pasword.text.isEmpty || _email.text.isEmpty) {
+                  if (authProvider.email!.isEmpty ||
+                      authProvider.password!.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Fill all the infos'),
                     ));
                   } else {
-                    setState(() {
-                      isLoading = true;
-                    });
+                    authProvider.isLoginLoading = true;
+                    authProvider.notify();
                     await UserService().login(
-                        email: _email.text.trim(),
-                        password: _pasword.text.trim(),
+                        email: authProvider.email!.trim(),
+                        password: authProvider.password!.trim(),
                         context: context);
-                    userProvider.usermodel!.email = _email.text.trim();
-                    userProvider.usermodel!.password = _pasword.text.trim();
-                    userProvider.notify();
-                    setState(() {
-                      isLoading = false;
-                    });
+
+                    authProvider.isLoginLoading = false;
+                    authProvider.notify();
                   }
                 },
-                child: isLoading
+                child: authProvider.isLoginLoading
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircularProgressIndicator(
@@ -81,12 +74,13 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )
                     : const Text("Login")),
-          TextButton(
-                    onPressed: () {
-                   registerProvider.isLoginPage = false;
-                   registerProvider.notify();
-                    },
-                    child: const Text('Register ?'),),
+            TextButton(
+              onPressed: () {
+                authProvider.isLoginPage = false;
+                authProvider.notify();
+              },
+              child: const Text('Register ?'),
+            ),
             SizedBox(
               height: Screen.height(context) * 4,
             ),

@@ -1,3 +1,4 @@
+import 'package:app_chat/core/provider/auth_provider.dart';
 import 'package:app_chat/ui/pages/bottoms/bottom_page.dart';
 import 'package:app_chat/ui/pages/pageview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,11 +18,14 @@ class UserService {
       {required String email,
       required String password,
       BuildContext? context}) async {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context!, listen: false);
     try {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
       late DataSnapshot snapshot;
       UserProvider userProvider =
-          Provider.of<UserProvider>(context!, listen: false);
+          Provider.of<UserProvider>(context, listen: false);
+
       await firebaseAuth
           .signInWithEmailAndPassword(
         email: email,
@@ -42,6 +46,7 @@ class UserService {
           userProvider.notify();
         }
         if (user != null) {
+          // ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const BottomPage()),
@@ -52,19 +57,25 @@ class UserService {
       String message = '';
       if (e.code == 'invalid-email') {
         message = 'Geçersiz e-posta.';
-        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message),
         ));
+        authProvider.isLoginLoading = false;
+        authProvider.notify();
       } else if (e.code == 'user-not-found') {
         message = 'Kullanıcı bulunmamaktadır.';
-        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message),
         ));
+        authProvider.isLoginLoading = false;
+        authProvider.notify();
       } else if (e.code == 'wrong-password') {
         message = 'Hatalı e-posta veya şifre.';
-        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(message),
         ));
+        authProvider.isLoginLoading = false;
+        authProvider.notify();
       }
     }
   }
@@ -99,14 +110,20 @@ class UserService {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Geçersiz e-posta.'),
         ));
+        registerProvider.isRegistering = false;
+        registerProvider.notify();
       } else if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Weak Password"),
         ));
+        registerProvider.isRegistering = false;
+        registerProvider.notify();
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("email-already-in-use"),
         ));
+        registerProvider.isRegistering = false;
+        registerProvider.notify();
       }
     } catch (e) {
       print(e);
@@ -128,8 +145,9 @@ class UserService {
         (route) => false);
   }
 
-  Future<void> chechUsername(String username, BuildContext context,
-      ValueNotifier<bool> isAvailable) async {
+  Future<void> chechUsername(String username, BuildContext context) async {
+    RegisterProvider registerProvider =
+        Provider.of<RegisterProvider>(context, listen: false);
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     DataSnapshot snapshot = await ref.child('usernames').child(username).get();
 
@@ -137,12 +155,14 @@ class UserService {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('The username already in use!'),
       ));
-      isAvailable.value = false;
+      registerProvider.isAvailable = false;
+      registerProvider.notify();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('The username is available'),
       ));
-      isAvailable.value = true;
+      registerProvider.isAvailable = true;
+      registerProvider.notify();
     }
   }
 }

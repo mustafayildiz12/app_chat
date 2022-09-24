@@ -12,7 +12,10 @@ class RegisterProvider extends ChangeNotifier {
   String? email;
   String? password;
   String? profileImage;
-  bool isLoginPage = false;
+  
+  bool isAvailable = false;
+  bool isCheckingUsername = false;
+  bool isRegistering = false;
 
   Future<void> registerWithProvider(
       String email, String password, BuildContext? context) async {
@@ -20,7 +23,7 @@ class RegisterProvider extends ChangeNotifier {
         .register(email: email, password: password, context: context);
 
     UserModel userModel = UserModel(
-        uid: uid ?? 'zaza',
+        uid: uid ?? '',
         username: username!,
         myFollowers: [],
         myCollection: List.empty(growable: true),
@@ -31,10 +34,12 @@ class RegisterProvider extends ChangeNotifier {
         Provider.of<UserProvider>(context!, listen: false);
     userProvider.usermodel = userModel;
 
-    await DatabaseService().createAccount(userModel);
+    if (uid != null) {
+      await DatabaseService().createAccount(userModel);
 
-    //   await DatabaseService().savePhoneNumber(phoneNumber!, uid!);
-    await DatabaseService().saveUsernames(username!, uid!);
+      await DatabaseService().saveUsernames(username!, uid!);
+    }
+    print(uid);
   }
 
   void notify() {

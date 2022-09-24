@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/class/screen_class.dart';
-import '../../core/provider/register_provider.dart';
+import '../../core/provider/auth_provider.dart';
 
 class PageViewNavPage extends StatefulWidget {
   const PageViewNavPage({Key? key}) : super(key: key);
@@ -16,10 +16,10 @@ class PageViewNavPage extends StatefulWidget {
 class _PageViewNavPageState extends State<PageViewNavPage> {
   @override
   Widget build(BuildContext context) {
-    RegisterProvider registerProvider = Provider.of<RegisterProvider>(context);
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(registerProvider.isLoginPage ? "Register" : "Login"),
+        title: Text(authProvider.isLoginPage ? "Register" : "Login"),
         centerTitle: true,
       ),
       body: Padding(
@@ -28,13 +28,12 @@ class _PageViewNavPageState extends State<PageViewNavPage> {
           child: Column(
             children: [
               SizedBox(
-               height: Screen.height(context)*60,
+                height: Screen.height(context) * 60,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 1000),
-                      switchInCurve: Curves.easeInBack,
-                      switchOutCurve: Curves.easeInBack.flipped,
-                
-                  child: registerProvider.isLoginPage
+                  switchInCurve: Curves.easeInBack,
+                  switchOutCurve: Curves.easeInBack.flipped,
+                  child: authProvider.isLoginPage
                       ? const LoginPage()
                       : const RegisterPage(),
                 ),
