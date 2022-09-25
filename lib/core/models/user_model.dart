@@ -10,7 +10,7 @@ class UserModel {
   String? profileImage;
   List myFollowers;
   String password;
-  List myCollection = List.empty(growable: true);
+  final List myCollection;
 
   UserModel(
       {required this.uid,
@@ -62,7 +62,9 @@ class UserModel {
         username: map['username'] ?? '',
         email: map['email'] ?? '',
         password: map['password'] ?? '',
-        myCollection: map['myCollection'] ?? [],
+        myCollection: map['myCollection'] != null
+            ? map['myCollection'].map((e) => e).toList()
+            : [],
         profileImage: map['profileImage'] ?? '');
   }
 

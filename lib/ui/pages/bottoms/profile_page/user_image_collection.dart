@@ -33,12 +33,33 @@ class _UserImageCollectionState extends State<UserImageCollection> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.file(
-                          File(imageProvider.imageFileList![index].path),
-                          height: Screen.height(context) * 20,
-                          fit: BoxFit.fitHeight));
+                  return Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.file(
+                        File(imageProvider.imageFileList![index].path),
+                        height: Screen.height(context) * 20,
+                        fit: BoxFit.fitHeight),
+                      ),
+                       Positioned(
+                        top: 2,
+                        right: 2,
+                        child: 
+                      GestureDetector(
+                        onTap:(){
+                          imageProvider.imageFileList!.removeAt(index);
+                          imageProvider.notify();
+                          print("aa");
+                        },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                      )
+                      )
+                    ],
+                  );
                 }),
           )),
           TextButton(
