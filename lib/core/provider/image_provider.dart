@@ -7,14 +7,63 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/helpers/my_image_picker.dart';
+
 class UploadImageProvider extends ChangeNotifier {
   bool isCollectionLoaded = false;
+  bool isProfileLoaded = false;
+  bool isProfileLoading = false;
 
   final ImagePicker imagePicker = ImagePicker();
-  UploadTask? uploadTask;
-  String? imageUrl;
-  String imagePath = '';
+  UploadTask? uploadmultiTask;
+  String? imageMultiUrl;
+  String imageMultiPath = '';
   List<XFile>? imageFileList = [];
+
+  File? pickedFile;
+  UploadTask? uploadTask;
+  String? downloadUrl;
+  String imageUrl = '';
+  String imagePath = '';
+
+  Future uploadFile(BuildContext context) async {
+    final file = File(pickedFile?.path ?? '');
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    final ref = FirebaseStorage.instance.ref().child(imagePath);
+    final DatabaseReference firebaseDatabase = FirebaseDatabase.instance
+        .ref("users")
+        .child(userProvider.usermodel!.uid);
+
+    uploadTask = ref.putFile(file, SettableMetadata(contentType: 'image/png'));
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    imageUrl = await snapshot.ref.getDownloadURL();
+
+    await firebaseDatabase.update({
+      "profileImage": imageUrl,
+    });
+    userProvider.usermodel!.profileImage = imageUrl;
+    userProvider.notify();
+
+    uploadTask = null;
+    notify();
+  }
+
+  Future selectImage() async {
+    File? result;
+    try {
+      result = await MyImagePicker.pickImage();
+    } catch (e) {
+      print('error$e');
+    }
+    print(result!.path);
+    if (result == null) return;
+
+    pickedFile = File(result.path);
+    notify();
+  }
 
   void checkCollectionLoaded() {
     isCollectionLoaded = !isCollectionLoaded;
@@ -30,23 +79,24 @@ class UploadImageProvider extends ChangeNotifier {
     notify();
   }
 
-  Future uploadFile(String path) async {
+  Future uploadmultiFile(String path) async {
     final file = File(path);
 
-    final ref = FirebaseStorage.instance.ref().child(imagePath);
+    final ref = FirebaseStorage.instance.ref().child(imageMultiPath);
 
-    uploadTask = ref.putFile(file);
+    uploadmultiTask = ref.putFile(file);
 
-    final snapshot = await uploadTask!.whenComplete(() {});
+    final snapshot = await uploadmultiTask!.whenComplete(() {});
 
-    imageUrl = await snapshot.ref.getDownloadURL();
+    imageMultiUrl = await snapshot.ref.getDownloadURL();
 
-    uploadTask = null;
+    uploadmultiTask = null;
     notify();
   }
 
   void uploadSelectedImagesToFirebase(BuildContext context) async {
-    UserProvider userProvider = Provider.of<UserProvider>(context,listen: false);
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
     checkCollectionLoaded();
     DatabaseReference ref = FirebaseDatabase.instance
         .ref("users")
@@ -54,11 +104,11 @@ class UploadImageProvider extends ChangeNotifier {
 
     for (int i = 0; i < imageFileList!.length; i++) {
       final String id = DateTime.now().millisecondsSinceEpoch.toString();
-      imagePath =
-          'images/${userProvider.usermodel!.email}/collection/$id/$i.png';
+      imageMultiPath =
+          'images/${userProvider.usermodel!.email}/collection/$id.png';
 
-      await uploadFile(imageFileList![i].path);
-      userProvider.usermodel!.myCollection.add(imageUrl);
+      await uploadmultiFile(imageFileList![i].path);
+      userProvider.usermodel!.myCollection.add(imageMultiUrl);
       notify();
 
       await ref.update({

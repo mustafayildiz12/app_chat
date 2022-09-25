@@ -1,13 +1,11 @@
-part of 'profile_page.dart';
+part of '../profile_page.dart';
 
 class _UpdateUserNameDialog extends StatelessWidget {
   const _UpdateUserNameDialog({
     Key? key,
-    required this.newUsername,
     required this.userProvider,
   }) : super(key: key);
 
-  final TextEditingController newUsername;
   final UserProvider userProvider;
 
   @override
@@ -15,11 +13,12 @@ class _UpdateUserNameDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text("Change Username"),
       content: TextFormField(
-        controller: newUsername,
+        initialValue: userProvider.usermodel!.username,
+        onChanged: (v) {
+          userProvider.updateUsername = v;
+          userProvider.notify();
+        },
         maxLength: 21,
-        decoration: InputDecoration(
-          hintText: userProvider.usermodel!.username,
-        ),
       ),
       actions: [
         ElevatedButton(
@@ -34,10 +33,11 @@ class _UpdateUserNameDialog extends StatelessWidget {
                   .ref("users")
                   .child(userProvider.usermodel!.uid);
               await ref.update({
-                "username": newUsername.text,
+                "username": userProvider.updateUsername,
               });
-              userProvider.usermodel!.username = newUsername.text;
+              userProvider.usermodel!.username = userProvider.updateUsername!;
               userProvider.notify();
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             },
             child: const Text("Done"))
