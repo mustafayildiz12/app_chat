@@ -1,6 +1,6 @@
 import 'package:app_chat/core/provider/auth_provider.dart';
 import 'package:app_chat/ui/pages/bottoms/bottom_page.dart';
-import 'package:app_chat/ui/pages/pageview.dart';
+import 'package:app_chat/ui/pages/auth/main_auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -141,7 +141,7 @@ class UserService {
 
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const PageViewNavPage()),
+        MaterialPageRoute(builder: (context) => const MainAuthPage()),
         (route) => false);
   }
 

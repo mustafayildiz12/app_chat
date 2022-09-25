@@ -1,14 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_chat/core/models/user_model.dart';
+import 'package:app_chat/core/provider/chat_detail_provider.dart';
+import 'package:app_chat/core/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/helpers/voice_enums.dart';
+import '../service/chat_service.dart';
+import '../service/storage_service.dart';
 
 class VoiceRecordProvider extends ChangeNotifier {
   FlutterSoundRecorder recorderModule = FlutterSoundRecorder();
@@ -53,6 +59,44 @@ class VoiceRecordProvider extends ChangeNotifier {
     await recorderModule
         .setSubscriptionDuration(const Duration(milliseconds: 10));
     await initializeDateFormatting();
+  }
+
+  Future sendVoiceMessage(BuildContext context, UserModel getDetails) async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    ChatDetailProvider chatDetailProvider =
+        Provider.of<ChatDetailProvider>(context, listen: false);
+    if (recordingEnded) {
+      String? audioFilePath;
+
+      if (await fileExists(path[codec.index]!)) {
+        audioFilePath = path[codec.index];
+        print('audioFilePath: $audioFilePath');
+        File recordFile = File(audioFilePath!);
+        String voicePath = await StorageService().sendVoiceRecord(
+            uid: userProvider.usermodel!.uid, recordFile: recordFile);
+        print('voicePath: $voicePath');
+        // ignore: use_build_context_synchronously
+        await ChatService().sendMessage(context,
+            message: voicePath,
+            chatID: '${userProvider.usermodel!.uid}${getDetails.uid}',
+            chatUser: getDetails,
+            type: 'voice');
+      }
+      chatDetailProvider.showVoiceRecord = !chatDetailProvider.showVoiceRecord;
+      isRecording = false;
+      recordingEnded = false;
+      recorderTxt = '00:00';
+      chatDetailProvider.notify;
+
+      notifyListeners();
+    } else {
+      if (isRecording) {
+        await stopRecorder();
+      } else {
+        await startRecorder();
+      }
+    }
   }
 
   Future<void> startRecorder() async {

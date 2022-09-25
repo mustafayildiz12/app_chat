@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app_chat/core/provider/user_provider.dart';
-import 'package:app_chat/ui/pages/pageview.dart';
+import 'package:app_chat/ui/pages/auth/main_auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -48,25 +48,23 @@ class SplashProvider extends ChangeNotifier {
 
         userProvider.notify();
         Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const BottomPage()),
-          (route) => false);
+            context,
+            MaterialPageRoute(builder: (context) => const BottomPage()),
+            (route) => false);
       } else {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const PageViewNavPage()),
+            MaterialPageRoute(builder: (context) => const MainAuthPage()),
             (route) => false);
       }
       await Future.delayed(const Duration(seconds: 3));
-
-      
 
       return;
     }
     await Future.delayed(const Duration(seconds: 1));
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const PageViewNavPage()),
+        MaterialPageRoute(builder: (context) => const MainAuthPage()),
         (route) => false);
   }
 }

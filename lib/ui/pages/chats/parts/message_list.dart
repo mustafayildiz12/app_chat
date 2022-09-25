@@ -1,19 +1,7 @@
-import 'dart:collection';
+part of '../chat_page.dart';
 
-import 'package:app_chat/core/class/screen_class.dart';
-import 'package:app_chat/core/service/database_service.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import '../../../core/models/message_model.dart';
-import '../../../core/models/user_model.dart';
-import '../../../core/provider/chat_detail_provider.dart';
-import '../../../utils/helpers/custom_audio_player.dart';
-
-class MessagesList extends StatelessWidget {
-  const MessagesList({
+class _MessagesList extends StatelessWidget {
+  const _MessagesList({
     Key? key,
     required this.chatDetailProvider,
     required this.chatID,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/class/screen_class.dart';
-import '../../core/provider/auth_provider.dart';
-import '../../core/provider/register_provider.dart';
-import '../../core/repostiroy/user_repository.dart';
+import '../../../core/class/screen_class.dart';
+import '../../../core/provider/auth_provider.dart';
+import '../../../core/provider/register_provider.dart';
+import '../../../core/repostiroy/user_repository.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);

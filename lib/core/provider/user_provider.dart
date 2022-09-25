@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app_chat/ui/pages/pageview.dart';
+import 'package:app_chat/ui/pages/auth/main_auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -13,7 +13,6 @@ import '../repostiroy/user_repository.dart';
 class UserProvider extends ChangeNotifier {
   UserModel? usermodel;
   String? updateUsername;
-  
 
   Future<void> initUser(context) async {
     User? currentUser = UserService().getCurrentUser();
@@ -22,7 +21,7 @@ class UserProvider extends ChangeNotifier {
       await Future.delayed(const Duration(seconds: 3));
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const PageViewNavPage()),
+          MaterialPageRoute(builder: (context) => const MainAuthPage()),
           (route) => false);
 
       return;
@@ -45,7 +44,7 @@ class UserProvider extends ChangeNotifier {
         Timer(
             const Duration(seconds: 3),
             () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => const PageViewNavPage())));
+                builder: (BuildContext context) => const MainAuthPage())));
       }
 
       await Future.delayed(const Duration(seconds: 1));

@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/helpers/my_image_picker.dart';
 import '../models/message_model.dart';
 import '../service/chat_service.dart';
 import '../service/database_service.dart';
@@ -23,6 +25,44 @@ class ChatDetailProvider extends ChangeNotifier {
   bool showVoiceRecord = false;
 
   UserMetadata? opponent;
+
+  File? pickedFile;
+  UploadTask? uploadTask;
+  String? downloadUrl;
+  String imageUrl = '';
+  String imagePath = '';
+  bool isLoading = false;
+  bool isSendingImage = false;
+
+  Future uploadFile(BuildContext context, String chatID) async {
+    final file = File(pickedFile?.path ?? '');
+
+    final ref = FirebaseStorage.instance.ref().child(imagePath);
+
+    uploadTask = ref.putFile(file, SettableMetadata(contentType: 'image/png'));
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    imageUrl = await snapshot.ref.getDownloadURL();
+    //  print('image' + imageUrl);
+
+    uploadTask = null;
+    notify();
+  }
+
+  Future selectImage() async {
+    File? result;
+    try {
+      result = await MyImagePicker.pickImage();
+    } catch (e) {
+      print('error$e');
+    }
+    print(result!.path);
+    if (result == null) return;
+
+    pickedFile = File(result.path);
+    notify();
+  }
 
   Stream chatStream(String chatID) {
     return DatabaseService().chatStream(chatID);
