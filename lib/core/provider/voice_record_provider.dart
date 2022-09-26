@@ -135,6 +135,7 @@ class VoiceRecordProvider extends ChangeNotifier {
 
   Future<void> stopRecorder() async {
     await recorderModule.stopRecorder();
+
     // if (Platform.isAndroid) {
     //   stopTimer();
     // }
@@ -152,6 +153,10 @@ class VoiceRecordProvider extends ChangeNotifier {
 
   Future<bool> fileExists(String path) async {
     return await File(path).exists();
+  }
+
+  notify() {
+    notifyListeners();
   }
 }
 

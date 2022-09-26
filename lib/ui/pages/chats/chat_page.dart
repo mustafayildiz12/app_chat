@@ -79,6 +79,10 @@ class _ChatPageState extends State<ChatPage> {
                     onTap: () {
                       chatDetailProvider.showVoiceRecord =
                           !chatDetailProvider.showVoiceRecord;
+                      voiceRecordProvider.recorderTxt = '00:00';
+                      voiceRecordProvider.isRecording = false;
+                      voiceRecordProvider.recordingEnded = false;
+                      voiceRecordProvider.notify();
                       chatDetailProvider.notify();
                     },
                     child: const Icon(Icons.close),
