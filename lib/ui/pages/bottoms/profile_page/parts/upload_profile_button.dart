@@ -1,4 +1,5 @@
 part of '../profile_page.dart';
+
 class _UploadProfileButton extends StatelessWidget {
   const _UploadProfileButton({
     Key? key,
@@ -22,7 +23,21 @@ class _UploadProfileButton extends StatelessWidget {
                   'images/${userProvider.usermodel!.email}/profileImage.png';
 
               await imageProvider.uploadFile(context);
+              /*
+              Directory tempDir = await getTemporaryDirectory();
+              String tempPath = tempDir.path;
 
+              final mainPath = "$tempPath/logo.png";
+
+              await Dio().download(imageProvider.imageUrl, mainPath);
+
+              final hiveUrl = CachedDomainHive();
+              await hiveUrl.init();
+
+              await hiveUrl.setValue(mainPath);
+          
+           */
+              imageProvider.pickedFile = null;
               imageProvider.isProfileLoaded = false;
               imageProvider.isProfileLoading = false;
               imageProvider.notify();

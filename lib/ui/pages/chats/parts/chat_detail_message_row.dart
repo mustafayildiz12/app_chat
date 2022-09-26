@@ -3,14 +3,11 @@ part of '../chat_page.dart';
 class _ChatDetailMessageRow extends StatelessWidget {
   const _ChatDetailMessageRow({
     Key? key,
-    required TextEditingController chat,
     required this.chatDetailProvider,
     required this.widget,
     required this.userProvider,
-  })  : _chat = chat,
-        super(key: key);
+  }) : super(key: key);
 
-  final TextEditingController _chat;
   final ChatDetailProvider chatDetailProvider;
   final ChatPage widget;
   final UserProvider userProvider;
@@ -23,7 +20,7 @@ class _ChatDetailMessageRow extends StatelessWidget {
         children: [
           Expanded(
             child: TextFormField(
-              controller: _chat,
+              controller: chatDetailProvider.chatController,
               decoration: InputDecoration(
                   prefixIcon: GestureDetector(
                     onTap: () {
@@ -51,14 +48,14 @@ class _ChatDetailMessageRow extends StatelessWidget {
               backgroundColor: Colors.blue,
               child: IconButton(
                 onPressed: () async {
-                  if (_chat.text.isNotEmpty) {
+                  if (chatDetailProvider.chatController.text.isNotEmpty) {
                     await ChatService().sendMessage(context,
                         chatUser: widget.getDetails,
-                        message: _chat.text,
+                        message: chatDetailProvider.chatController.text,
                         type: 'text',
                         chatID:
                             '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
-                    _chat.clear();
+                    chatDetailProvider.chatController.clear();
                   }
 
                   if (chatDetailProvider.pickedFile != null) {
@@ -138,8 +135,8 @@ class _ChatDetailBottomSheet extends StatelessWidget {
 extension ChatDetailBottomSheetExtension on _ChatDetailBottomSheet {
   show(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Theme.of(context).shadowColor,
-      shape: const RoundedRectangleBorder(
+      backgroundColor: Theme.of(context).primaryColor
+,      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),
       ),

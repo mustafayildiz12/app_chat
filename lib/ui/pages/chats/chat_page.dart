@@ -32,7 +32,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final TextEditingController _chat = TextEditingController();
+  // final TextEditingController _chat = TextEditingController();
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _ChatPageState extends State<ChatPage> {
                     padding: const EdgeInsets.all(3.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Theme.of(context).shadowColor,
+                          color: Theme.of(context).backgroundColor,
                           borderRadius: BorderRadius.circular(12)),
                       child: Center(
                         child: Text(voiceRecordProvider.recorderTxt),
@@ -123,7 +123,6 @@ class _ChatPageState extends State<ChatPage> {
             ),
           if (!chatDetailProvider.showVoiceRecord)
             _ChatDetailMessageRow(
-                chat: _chat,
                 chatDetailProvider: chatDetailProvider,
                 widget: widget,
                 userProvider: userProvider)

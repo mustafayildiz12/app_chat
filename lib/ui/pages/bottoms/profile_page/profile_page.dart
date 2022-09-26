@@ -1,14 +1,19 @@
+import 'dart:io';
+
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/provider/theme_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/provider/image_provider.dart';
 import '../../../../core/repostiroy/user_repository.dart';
+import '../../../../core/service/cache/cache_url.dart';
 import 'user_image_collection.dart';
 
 part 'parts/update_username_dialog.dart';
@@ -27,6 +32,7 @@ class ProfilePage extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     UploadImageProvider imageProvider =
         Provider.of<UploadImageProvider>(context);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Profile"),

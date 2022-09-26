@@ -1,3 +1,4 @@
+import 'package:app_chat/core/adapters/hive/hive_adapter.dart';
 import 'package:app_chat/core/provider/auth_provider.dart';
 import 'package:app_chat/core/provider/chat_detail_provider.dart';
 import 'package:app_chat/core/provider/image_provider.dart';
@@ -9,6 +10,7 @@ import 'package:app_chat/ui/pages/splash.dart';
 import 'package:app_chat/utils/helpers/theme_style.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 import 'core/provider/bottom_navigation_provider.dart';
@@ -20,6 +22,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.android,
   );
+  await Hive.initFlutter();
+
+  HiveAdapters.init();
+
   runApp(const MyApp());
 }
 

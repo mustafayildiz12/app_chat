@@ -12,7 +12,7 @@ import '../service/chat_service.dart';
 import '../service/database_service.dart';
 
 class ChatDetailProvider extends ChangeNotifier {
-  TextEditingController controller = TextEditingController();
+  TextEditingController chatController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
   List<Message> readedMessages = [];
@@ -123,7 +123,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
     //  bool isVoice = false,
   }) async {
-    controller.clear();
+    chatController.clear();
     await ChatService().sendMessage(
       context,
       chatUser: chatUser,

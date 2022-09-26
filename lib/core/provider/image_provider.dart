@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/helpers/my_image_picker.dart';
+import '../service/cache/cache_url.dart';
 
 class UploadImageProvider extends ChangeNotifier {
   bool isCollectionLoaded = false;
@@ -25,6 +26,14 @@ class UploadImageProvider extends ChangeNotifier {
   String? downloadUrl;
   String imageUrl = '';
   String imagePath = '';
+  String? prfoileImageHive;
+
+  init() async {
+    final hiveUrl = CachedDomainHive();
+    hiveUrl.init();
+    prfoileImageHive = hiveUrl.getValue();
+    notify();
+  }
 
   Future uploadFile(BuildContext context) async {
     final file = File(pickedFile?.path ?? '');
@@ -48,6 +57,7 @@ class UploadImageProvider extends ChangeNotifier {
     userProvider.notify();
 
     uploadTask = null;
+
     notify();
   }
 
