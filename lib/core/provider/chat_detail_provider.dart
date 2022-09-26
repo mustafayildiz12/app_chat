@@ -50,10 +50,24 @@ class ChatDetailProvider extends ChangeNotifier {
     notify();
   }
 
-  Future selectImage() async {
+  Future selectImageFromGallery() async {
     File? result;
     try {
       result = await MyImagePicker.pickImage();
+    } catch (e) {
+      print('error$e');
+    }
+    print(result!.path);
+    if (result == null) return;
+
+    pickedFile = File(result.path);
+    notify();
+  }
+
+  Future selectImageFromCamera() async {
+    File? result;
+    try {
+      result = await MyImagePicker.takePicture();
     } catch (e) {
       print('error$e');
     }

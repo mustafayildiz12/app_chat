@@ -81,11 +81,11 @@ class MyImagePicker {
             : null;
   }
 
-/*
   static Future<File?> takePicture() async {
     final ImagePicker imagePicker = ImagePicker();
     try {
-      final XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.camera);
+      final XFile? selectedImage =
+          await imagePicker.pickImage(source: ImageSource.camera);
       if (selectedImage == null) {
         return null;
       }
@@ -104,12 +104,12 @@ class MyImagePicker {
       return null;
     }
   }
- */
 
   static Future<File?> pickImage() async {
     final ImagePicker imagePicker = ImagePicker();
     try {
-      final XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? selectedImage =
+          await imagePicker.pickImage(source: ImageSource.gallery);
       if (selectedImage == null) {
         return null;
       }

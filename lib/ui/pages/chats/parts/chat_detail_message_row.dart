@@ -1,4 +1,5 @@
-part  of '../chat_page.dart';
+part of '../chat_page.dart';
+
 class _ChatDetailMessageRow extends StatelessWidget {
   const _ChatDetailMessageRow({
     Key? key,
@@ -6,14 +7,13 @@ class _ChatDetailMessageRow extends StatelessWidget {
     required this.chatDetailProvider,
     required this.widget,
     required this.userProvider,
-   
-  }) : _chat = chat, super(key: key);
+  })  : _chat = chat,
+        super(key: key);
 
   final TextEditingController _chat;
   final ChatDetailProvider chatDetailProvider;
   final ChatPage widget;
   final UserProvider userProvider;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,20 @@ class _ChatDetailMessageRow extends StatelessWidget {
                   ),
                   suffixIcon: IconButton(
                     onPressed: () async {
-                      chatDetailProvider.selectImage();
-
-                      chatDetailProvider.isLoading = true;
-                      chatDetailProvider.notify();
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Theme.of(context).shadowColor,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)),
+                        ),
+                        builder: (context) {
+                          return _ChatDetailBottomSheet(
+                            chatDetailProvider: chatDetailProvider,
+                          );
+                        },
+                      );
                     },
                     icon: const Icon(Icons.photo_camera),
                   ),
@@ -94,6 +104,44 @@ class _ChatDetailMessageRow extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class _ChatDetailBottomSheet extends StatelessWidget {
+  const _ChatDetailBottomSheet({
+    Key? key,
+    required this.chatDetailProvider,
+  }) : super(key: key);
+
+  final ChatDetailProvider chatDetailProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+            onTap: () {
+              chatDetailProvider.selectImageFromCamera();
+
+              chatDetailProvider.isLoading = true;
+              chatDetailProvider.notify();
+              Navigator.pop(context);
+            },
+            title: const Text('Kamera'),
+            trailing: const Icon(Icons.camera_alt)),
+        ListTile(
+            onTap: () {
+              chatDetailProvider.selectImageFromGallery();
+
+              chatDetailProvider.isLoading = true;
+              chatDetailProvider.notify();
+               Navigator.pop(context);
+            },
+            title: const Text('Galeri'),
+            trailing: const Icon(Icons.photo))
+      ],
     );
   }
 }

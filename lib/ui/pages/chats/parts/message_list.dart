@@ -82,29 +82,47 @@ class _MessagesList extends StatelessWidget {
                                   : Theme.of(context).hintColor,
                               borderRadius: BorderRadius.circular(12)),
                           child: message.type == 'image'
-                              ? SizedBox(
-                                
-                                height: Screen.height(context)*40,
-                                child: Image.network(
-                                    message.message,
-                                    fit: BoxFit.fill,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      final totalBytes =
-                                          loadingProgress?.expectedTotalBytes;
-                                      final bytesLoaded =
-                                          loadingProgress?.cumulativeBytesLoaded;
-                                      if (totalBytes != null &&
-                                          bytesLoaded != null) {
-                                        return const CupertinoActivityIndicator(
-                                            //  value: bytesLoaded / totalBytes,
-                                            );
-                                      } else {
-                                        return child;
-                                      }
-                                    },
+                              ? GestureDetector(
+                                  onTap: () {
+                                    _ShowPickImageDialog(
+                                      message: message,
+                                    ).show(context);
+                                    /*
+                                    showDialog(
+                                      barrierColor:
+                                          Theme.of(context).shadowColor,
+                                      context: context,
+                                      builder: (context) {
+                                        return _ShowPickImageDialog(
+                                            message: message);
+                                      },
+                                    );
+                                    */
+                                  },
+                                  child: SizedBox(
+                                    height: Screen.height(context) * 40,
+                                    width: Screen.width(context) * 50,
+                                    child: Image.network(
+                                      message.message,
+                                      fit: BoxFit.fitWidth,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        final totalBytes =
+                                            loadingProgress?.expectedTotalBytes;
+                                        final bytesLoaded = loadingProgress
+                                            ?.cumulativeBytesLoaded;
+                                        if (totalBytes != null &&
+                                            bytesLoaded != null) {
+                                          return const CupertinoActivityIndicator(
+                                              //  value: bytesLoaded / totalBytes,
+                                              );
+                                        } else {
+                                          return child;
+                                        }
+                                      },
+                                    ),
                                   ),
-                              )
+                                )
                               : message.type == 'voice'
                                   ? VoiceMessage(message: message)
                                   : Text(message.message)),

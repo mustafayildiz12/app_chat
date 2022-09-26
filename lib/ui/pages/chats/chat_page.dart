@@ -21,6 +21,7 @@ part 'parts/chat_detail_popup_button.dart';
 part 'parts/chat_detail_message_row.dart';
 part 'parts/chat_stream.dart';
 part 'parts/message_list.dart';
+part 'parts/show_pick_image_dialog.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel getDetails;
@@ -83,10 +84,15 @@ class _ChatPageState extends State<ChatPage> {
                     child: const Icon(Icons.close),
                   ),
                   Expanded(
-                      child: Container(
-                    color: Colors.pink,
-                    child: Center(
-                      child: Text(voiceRecordProvider.recorderTxt),
+                      child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).shadowColor,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Center(
+                        child: Text(voiceRecordProvider.recorderTxt),
+                      ),
                     ),
                   )),
                   GestureDetector(
@@ -111,11 +117,12 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-          _ChatDetailMessageRow(
-              chat: _chat,
-              chatDetailProvider: chatDetailProvider,
-              widget: widget,
-              userProvider: userProvider)
+          if (!chatDetailProvider.showVoiceRecord)
+            _ChatDetailMessageRow(
+                chat: _chat,
+                chatDetailProvider: chatDetailProvider,
+                widget: widget,
+                userProvider: userProvider)
         ],
       ),
     );
