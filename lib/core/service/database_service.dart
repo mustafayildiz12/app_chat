@@ -141,17 +141,19 @@ class DatabaseService {
     });
   }
 
+  Future<void> updateToken(String uid, String token) async {
+    await firebaseDatabase.ref().child('users').child(uid).update({
+      'token': token,
+    });
+  }
+
   /*Future<void> removeAnonym(String chatID) async {
     await firebaseDatabase.ref('chats').child(chatID).update({
       'anonym': false,
     });
   }
 
-  Future<void> updateToken(String uid, String token) async {
-    await firebaseDatabase.ref().child('users').child(uid).update({
-      'token': token,
-    });
-  }
+ 
 
   Future<void> updateLastLogin(String uid) async {
     await firebaseDatabase.ref().child('users').child(uid).update(

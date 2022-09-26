@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 import '../provider/user_provider.dart';
 import '../repostiroy/user_repository.dart';
+import 'notification_service.dart';
 
 class ChatService {
   FirebaseDatabase database = FirebaseDatabase.instance;
@@ -15,7 +16,7 @@ class ChatService {
     required UserModel chatUser,
     required String message,
     //   required void Function(String chatID) onNewChatID,
-   required String type,
+    required String type,
     //   bool isVoice = false,
   }) async {
     UserModel userModel =
@@ -76,7 +77,6 @@ class ChatService {
       'seen': false,
       'id': id,
       'type': type,
-      
     });
 
     await database
@@ -91,20 +91,20 @@ class ChatService {
       'seen': false,
       'id': id,
       'type': type,
-      
     });
 
     //  UserModel? userModel = await DatabaseService().getUser(chatUser.uid);
 
-    /*
-    await NotificationService().sendNotification(
-      recieverToken: userModel != null && userModel.token != null ? userModel.token! : chatUser.token!,
+    await NotificationService().sendMessageNotification(
+      recieverToken:
+          userModel.token != null ? userModel.token! : chatUser.token!,
       title: userModel.username,
       body: message,
+      type: 'text',
       senderName: userModel.username,
       senderProfilePictureUrl: userModel.profileImage,
+      chatId: userModel.uid + chatUser.uid,
     );
-    */
   }
 
   Future<List> getMyChats() async {

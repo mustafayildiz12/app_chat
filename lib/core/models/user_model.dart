@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class UserModel {
   final String uid;
   String username;
-
+  String? token;
   String email;
   String? profileImage;
   List myFollowers;
@@ -19,7 +19,8 @@ class UserModel {
       required this.password,
       required this.myFollowers,
       required this.myCollection,
-      this.profileImage});
+      this.profileImage,
+      this.token});
 
   UserModel copyWith(
       {String? uid,
@@ -28,6 +29,7 @@ class UserModel {
       String? password,
       List? myFollowers,
       List? myCollection,
+      String? token,
       String? profileImage}) {
     return UserModel(
         uid: uid ?? this.uid,
@@ -35,6 +37,7 @@ class UserModel {
         myFollowers: myFollowers ?? this.myFollowers,
         email: email ?? this.email,
         password: password ?? this.password,
+        token: token ?? this.token,
         myCollection: myCollection ?? this.myCollection,
         profileImage: profileImage ?? this.profileImage);
   }
@@ -46,6 +49,7 @@ class UserModel {
     result.addAll({'username': username});
 
     result.addAll({'email': email});
+    result.addAll({'token': token});
 
     result.addAll({'password': password});
     result.addAll({'profileImage': profileImage});
@@ -61,6 +65,7 @@ class UserModel {
         uid: map['uid'] ?? '',
         username: map['username'] ?? '',
         email: map['email'] ?? '',
+        token: map['token'] ?? '',
         password: map['password'] ?? '',
         myCollection: map['myCollection'] != null
             ? map['myCollection'].map((e) => e).toList()
@@ -81,6 +86,7 @@ class UserModel {
         other.uid == uid &&
         other.username == username &&
         other.email == email &&
+        other.token == token &&
         other.profileImage == profileImage &&
         listEquals(other.myFollowers, myFollowers) &&
         //    listEquals(other.myCollection, myCollection) &&
@@ -92,6 +98,7 @@ class UserModel {
     return uid.hashCode ^
         username.hashCode ^
         email.hashCode ^
+        token.hashCode ^
         myFollowers.hashCode ^
         profileImage.hashCode ^
         //    myCollection.hashCode ^

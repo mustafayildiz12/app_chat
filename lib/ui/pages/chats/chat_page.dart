@@ -47,6 +47,8 @@ class _ChatPageState extends State<ChatPage> {
     voiceRecordProvider.init();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);

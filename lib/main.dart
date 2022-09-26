@@ -9,6 +9,7 @@ import 'package:app_chat/core/provider/voice_record_provider.dart';
 import 'package:app_chat/ui/pages/splash.dart';
 import 'package:app_chat/utils/helpers/theme_style.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,16 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getCurrentAppTheme();
+    initMessagingListener();
+  }
+
+  void initMessagingListener() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('Got a message whilst in the foreground!');
+      debugPrint('Message data: ${message.data}');
+
+      print('Message data: ${message.data}');
+    });
   }
 
   void getCurrentAppTheme() async {

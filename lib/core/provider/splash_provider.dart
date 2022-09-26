@@ -4,6 +4,7 @@ import 'package:app_chat/core/provider/user_provider.dart';
 import 'package:app_chat/ui/pages/auth/main_auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../ui/pages/bottoms/bottom_page.dart';
 import '../models/user_model.dart';
 import '../repostiroy/user_repository.dart';
+import '../service/database_service.dart';
 
 class SplashProvider extends ChangeNotifier {
   bool navigated = false;
@@ -38,6 +40,7 @@ class SplashProvider extends ChangeNotifier {
 
     if (currentUser != null) {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
+      FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       DataSnapshot dataSnapshot =
           await ref.child('users').child(currentUser.uid).get();
       if (dataSnapshot.exists) {
@@ -45,6 +48,14 @@ class SplashProvider extends ChangeNotifier {
 
         UserModel newUser = UserModel.fromMap(data);
         userProvider.usermodel = newUser;
+
+        firebaseMessaging.requestPermission();
+        String? token = await FirebaseMessaging.instance.getToken();
+        print('token $token');
+        if (userProvider.usermodel!.token != token && token != null) {
+          await DatabaseService().updateToken(currentUser.uid, token);
+          userProvider.usermodel!.token = token;
+        }
 
         userProvider.notify();
         Navigator.pushAndRemoveUntil(
