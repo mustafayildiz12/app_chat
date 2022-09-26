@@ -87,17 +87,6 @@ class _MessagesList extends StatelessWidget {
                                     _ShowPickImageDialog(
                                       message: message,
                                     ).show(context);
-                                    /*
-                                    showDialog(
-                                      barrierColor:
-                                          Theme.of(context).shadowColor,
-                                      context: context,
-                                      builder: (context) {
-                                        return _ShowPickImageDialog(
-                                            message: message);
-                                      },
-                                    );
-                                    */
                                   },
                                   child: SizedBox(
                                     height: Screen.height(context) * 40,

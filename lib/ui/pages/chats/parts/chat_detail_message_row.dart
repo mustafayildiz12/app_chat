@@ -35,20 +35,9 @@ class _ChatDetailMessageRow extends StatelessWidget {
                   ),
                   suffixIcon: IconButton(
                     onPressed: () async {
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: Theme.of(context).shadowColor,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10)),
-                        ),
-                        builder: (context) {
-                          return _ChatDetailBottomSheet(
-                            chatDetailProvider: chatDetailProvider,
-                          );
-                        },
-                      );
+                      _ChatDetailBottomSheet(
+                        chatDetailProvider: chatDetailProvider,
+                      ).show(context);
                     },
                     icon: const Icon(Icons.photo_camera),
                   ),
@@ -137,11 +126,25 @@ class _ChatDetailBottomSheet extends StatelessWidget {
 
               chatDetailProvider.isLoading = true;
               chatDetailProvider.notify();
-               Navigator.pop(context);
+              Navigator.pop(context);
             },
             title: const Text('Galeri'),
             trailing: const Icon(Icons.photo))
       ],
+    );
+  }
+}
+
+extension ChatDetailBottomSheetExtension on _ChatDetailBottomSheet {
+  show(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Theme.of(context).shadowColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+      ),
+      context: context,
+      builder: (context) => this,
     );
   }
 }
