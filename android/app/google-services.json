@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "620337587532",
+    "firebase_url": "https://chat-clean-default-rtdb.firebaseio.com",
     "project_id": "chat-clean",
     "storage_bucket": "chat-clean.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "620337587532-3lqh97vgkbkfskue0eprkkej9gfcgft4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "620337587532-1lp779kjubnpo8n3rd8lpfh5k0do15g6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appChat"
+              }
             }
           ]
         }

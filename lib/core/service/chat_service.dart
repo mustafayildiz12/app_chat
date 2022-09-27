@@ -93,11 +93,10 @@ class ChatService {
       'type': type,
     });
 
-    //  UserModel? userModel = await DatabaseService().getUser(chatUser.uid);
+    //   UserModel? userModelx = await DatabaseService().getUser(chatUser.uid);
 
     await NotificationService().sendMessageNotification(
-      recieverToken:
-          userModel.token != null ? userModel.token! : chatUser.token!,
+      recieverToken: chatUser.token != null ? chatUser.token! : chatUser.token!,
       title: userModel.username,
       body: message,
       type: 'text',
