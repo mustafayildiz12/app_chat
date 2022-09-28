@@ -10,6 +10,7 @@ class UserModel {
   String? profileImage;
   List myFollowers;
   String password;
+  String? profileImagePath;
   final List myCollection;
 
   UserModel(
@@ -20,6 +21,7 @@ class UserModel {
       required this.myFollowers,
       required this.myCollection,
       this.profileImage,
+      this.profileImagePath,
       this.token});
 
   UserModel copyWith(
@@ -29,10 +31,12 @@ class UserModel {
       String? password,
       List? myFollowers,
       List? myCollection,
+      String? profileImagePath,
       String? token,
       String? profileImage}) {
     return UserModel(
         uid: uid ?? this.uid,
+        profileImagePath: profileImagePath ?? this.profileImagePath,
         username: username ?? this.username,
         myFollowers: myFollowers ?? this.myFollowers,
         email: email ?? this.email,
@@ -50,6 +54,7 @@ class UserModel {
 
     result.addAll({'email': email});
     result.addAll({'token': token});
+    result.addAll({'profileImagePath': profileImagePath});
 
     result.addAll({'password': password});
     result.addAll({'profileImage': profileImage});
@@ -66,6 +71,7 @@ class UserModel {
         username: map['username'] ?? '',
         email: map['email'] ?? '',
         token: map['token'] ?? '',
+        profileImagePath: map['profileImagePath'] ?? '',
         password: map['password'] ?? '',
         myCollection: map['myCollection'] != null
             ? map['myCollection'].map((e) => e).toList()
@@ -88,6 +94,7 @@ class UserModel {
         other.email == email &&
         other.token == token &&
         other.profileImage == profileImage &&
+        other.profileImagePath == profileImagePath &&
         listEquals(other.myFollowers, myFollowers) &&
         //    listEquals(other.myCollection, myCollection) &&
         other.password == password;
@@ -99,6 +106,7 @@ class UserModel {
         username.hashCode ^
         email.hashCode ^
         token.hashCode ^
+        profileImagePath.hashCode ^
         myFollowers.hashCode ^
         profileImage.hashCode ^
         //    myCollection.hashCode ^

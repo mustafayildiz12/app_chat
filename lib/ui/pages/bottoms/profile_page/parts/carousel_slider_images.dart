@@ -14,20 +14,9 @@ class _CarouselSliderImages extends StatelessWidget {
       itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) =>
           SizedBox(
         height: Screen.height(context) * 25,
-        child: Image.network(
-          userProvider.usermodel!.myCollection[itemIndex],
+        child: Image.file(
+          File(userProvider.usermodel!.myCollection[itemIndex]),
           fit: BoxFit.fitHeight,
-          loadingBuilder: (context, child, loadingProgress) {
-            final totalBytes = loadingProgress?.expectedTotalBytes;
-            final bytesLoaded = loadingProgress?.cumulativeBytesLoaded;
-            if (totalBytes != null && bytesLoaded != null) {
-              return const CupertinoActivityIndicator(
-                  //  value: bytesLoaded / totalBytes,
-                  );
-            } else {
-              return child;
-            }
-          },
         ),
       ),
     );

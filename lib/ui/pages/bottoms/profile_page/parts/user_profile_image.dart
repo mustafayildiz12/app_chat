@@ -22,16 +22,15 @@ class _UserProfileImage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               )
-            : userProvider.usermodel!.profileImage != ''
-                ? CircleAvatar(
-                    radius: Screen.width(context) * 25,
-                    backgroundImage:
-                        NetworkImage(userProvider.usermodel!.profileImage!),
-                  )
-                : CircleAvatar(
-                    radius: Screen.width(context) * 25,
-                    backgroundColor: Colors.amber,
-                  ),
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.file(
+                  File(userProvider.usermodel!.profileImagePath!),
+                  height: Screen.width(context) * 50,
+                  width: Screen.width(context) * 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
         Positioned(
           bottom: -Screen.height(context) * 1,
           right: Screen.width(context) * 5,

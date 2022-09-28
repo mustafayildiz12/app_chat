@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:app_chat/core/provider/user_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/helpers/my_image_picker.dart';
-import '../service/cache/cache_url.dart';
 
 class UploadImageProvider extends ChangeNotifier {
   bool isCollectionLoaded = false;
@@ -17,7 +18,7 @@ class UploadImageProvider extends ChangeNotifier {
 
   final ImagePicker imagePicker = ImagePicker();
   UploadTask? uploadmultiTask;
-  String? imageMultiUrl;
+  String imageMultiUrl = '';
   String imageMultiPath = '';
   List<XFile>? imageFileList = [];
 
@@ -26,14 +27,15 @@ class UploadImageProvider extends ChangeNotifier {
   String? downloadUrl;
   String imageUrl = '';
   String imagePath = '';
-  String? prfoileImageHive;
 
+  /*
   init() async {
     final hiveUrl = CachedDomainHive();
     hiveUrl.init();
     prfoileImageHive = hiveUrl.getValue();
     notify();
   }
+   */
 
   Future uploadFile(BuildContext context) async {
     final file = File(pickedFile?.path ?? '');
@@ -53,6 +55,18 @@ class UploadImageProvider extends ChangeNotifier {
     await firebaseDatabase.update({
       "profileImage": imageUrl,
     });
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    final mainPath = "$tempPath/logo.png";
+
+    await Dio().download(imageUrl, mainPath);
+
+    userProvider.usermodel!.profileImagePath = mainPath;
+    await firebaseDatabase.update({
+      "profileImagePath": mainPath,
+    });
+
     userProvider.usermodel!.profileImage = imageUrl;
     userProvider.notify();
 
@@ -118,7 +132,14 @@ class UploadImageProvider extends ChangeNotifier {
           'images/${userProvider.usermodel!.email}/collection/$id.png';
 
       await uploadmultiFile(imageFileList![i].path);
-      userProvider.usermodel!.myCollection.add(imageMultiUrl);
+
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+
+      final mainPath = "$tempPath/$id.png";
+
+      await Dio().download(imageMultiUrl, mainPath);
+      userProvider.usermodel!.myCollection.add(mainPath);
       notify();
 
       await ref.update({
