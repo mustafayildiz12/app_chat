@@ -15,8 +15,9 @@ class _ChatDetailAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: Text(getDetails.username),
       leading: getDetails.profileImage != ""
-          ? Padding(
-              padding: const EdgeInsets.all(4.0),
+          ? Align(
+              widthFactor: 0.1,
+              alignment: Alignment.centerRight,
               child: CircleAvatar(
                 radius: Screen.height(context) * 3,
                 backgroundImage: NetworkImage(getDetails.profileImage!),

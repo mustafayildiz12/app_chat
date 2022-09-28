@@ -135,7 +135,7 @@ class _ChatDetailBottomSheet extends StatelessWidget {
 extension ChatDetailBottomSheetExtension on _ChatDetailBottomSheet {
   show(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Theme.of(context).primaryColor
+      backgroundColor: Theme.of(context).shadowColor
 ,      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),

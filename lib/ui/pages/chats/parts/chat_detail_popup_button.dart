@@ -12,6 +12,7 @@ class _ChatDetailPopupButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      color: Theme.of(context).shadowColor,
         itemBuilder: (context) => [
               PopupMenuItem(
                 child: Text(

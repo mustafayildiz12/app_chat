@@ -94,7 +94,7 @@ class _ChatPageState extends State<ChatPage> {
                     padding: const EdgeInsets.all(3.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).shadowColor,
                           borderRadius: BorderRadius.circular(12)),
                       child: Center(
                         child: Text(voiceRecordProvider.recorderTxt),
