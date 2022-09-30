@@ -119,6 +119,9 @@ class DatabaseService {
   Stream chatStream(String chatID) {
     return firebaseDatabase.ref('chats').child(chatID).onValue;
   }
+  Stream ardunioStream() {
+    return firebaseDatabase.ref('test').onValue;
+  }
 /*
 
   Future<Chat?> getChat(String chatID) async {

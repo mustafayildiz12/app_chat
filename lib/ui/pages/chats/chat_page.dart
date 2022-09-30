@@ -101,15 +101,18 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                   )),
-                  GestureDetector(
-                    onTap: () async {
-                      await voiceRecordProvider.sendVoiceMessage(
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.blue,
+                    child: IconButton(
+                     onPressed: ()async{
+                       await voiceRecordProvider.sendVoiceMessage(
                           context, widget.getDetails);
-                    },
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.blue,
-                      child: Icon(
+                     },
+                      icon:voiceRecordProvider.isRecordingMessageSending ?
+                      const CircularProgressIndicator()
+                       : Icon(
+                        
                         voiceRecordProvider.recordingEnded
                             ? Icons.send
                             : voiceRecordProvider.isRecording

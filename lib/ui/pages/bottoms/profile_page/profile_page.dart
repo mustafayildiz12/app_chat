@@ -4,24 +4,20 @@ import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/provider/theme_provider.dart';
 import 'package:app_chat/core/provider/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/provider/image_provider.dart';
 import '../../../../core/repostiroy/user_repository.dart';
-import '../../../../core/service/cache/cache_url.dart';
 import 'user_image_collection.dart';
 
-part 'parts/update_username_dialog.dart';
-part 'parts/carousel_slider_images.dart';
-part 'parts/user_profile_image.dart';
-part 'parts/user_profile_info.dart';
-part 'parts/upload_profile_button.dart';
-part 'parts/profile_popup_menu.dart';
+part 'modules/update_username_dialog.dart';
+part 'modules/carousel_slider_images.dart';
+part 'modules/user_profile_image.dart';
+part 'modules/user_profile_info.dart';
+part 'modules/upload_profile_button.dart';
+part 'modules/profile_popup_menu.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);

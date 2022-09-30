@@ -12,7 +12,7 @@ class RegisterProvider extends ChangeNotifier {
   String? email;
   String? password;
   String? profileImage;
-  
+
   bool isAvailable = false;
   bool isCheckingUsername = false;
   bool isRegistering = false;

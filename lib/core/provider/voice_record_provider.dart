@@ -24,6 +24,7 @@ class VoiceRecordProvider extends ChangeNotifier {
   StreamSubscription? recorderSubscription;
   bool isRecording = false;
   bool recordingEnded = false;
+  bool isRecordingMessageSending = false;
   String recorderTxt = '00:00';
   List<String?> path = [
     null,
@@ -68,6 +69,8 @@ class VoiceRecordProvider extends ChangeNotifier {
         Provider.of<ChatDetailProvider>(context, listen: false);
     if (recordingEnded) {
       String? audioFilePath;
+      isRecordingMessageSending = true;
+      notify();
 
       if (await fileExists(path[codec.index]!)) {
         audioFilePath = path[codec.index];
@@ -85,6 +88,7 @@ class VoiceRecordProvider extends ChangeNotifier {
       }
       chatDetailProvider.showVoiceRecord = !chatDetailProvider.showVoiceRecord;
       isRecording = false;
+      isRecordingMessageSending = false;
       recordingEnded = false;
       recorderTxt = '00:00';
       chatDetailProvider.notify;
