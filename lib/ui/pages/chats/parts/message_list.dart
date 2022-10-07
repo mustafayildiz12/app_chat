@@ -73,13 +73,15 @@ class _MessagesList extends StatelessWidget {
                       Container(
                           padding: const EdgeInsets.all(8.0),
                           margin: EdgeInsets.only(
-                              left: sendedByMe ? 50 : 0,
-                              right: sendedByMe ? 0 : 50,
-                              bottom: 8),
+                              left: sendedByMe ? Screen.width(context) * 10 : 0,
+                              right:
+                                  sendedByMe ? 0 : Screen.width(context) * 10,
+                              bottom: Screen.height(context) * 1.3),
                           decoration: BoxDecoration(
-                              color: sendedByMe
-                                  ? Theme.of(context).errorColor
-                                  : Theme.of(context).hintColor,
+                              gradient: LinearGradient(colors: [
+                                Theme.of(context).errorColor,
+                                sendedByMe ? Colors.brown : Colors.blue
+                              ]),
                               borderRadius: BorderRadius.circular(12)),
                           child: message.type == 'image'
                               ? GestureDetector(
@@ -114,7 +116,11 @@ class _MessagesList extends StatelessWidget {
                                 )
                               : message.type == 'voice'
                                   ? VoiceMessage(message: message)
-                                  : Text(message.message)),
+                                  : Text(
+                                      message.message,
+                                      style: TextStyle(
+                                          color: Colors.grey.shade300),
+                                    )),
                       Row(
                         mainAxisAlignment: sendedByMe
                             ? MainAxisAlignment.end

@@ -13,6 +13,7 @@ class _ProfilePopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+        color: Theme.of(context).bottomSheetTheme.backgroundColor,
         itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
@@ -22,19 +23,28 @@ class _ProfilePopupMenu extends StatelessWidget {
                         userProvider: userProvider,
                       ).show(context);
                     },
-                    child: const Text("Change Username")),
+                    child: Text(
+                      "Change Username",
+                      style: TextStyle(color: Colors.grey.shade300),
+                    )),
               ),
               PopupMenuItem(
                 value: 2,
                 onTap: () {
                   UserService().logout(context);
                 },
-                child: const Text("Sign Out"),
+                child: Text(
+                  "Sign Out",
+                  style: TextStyle(color: Colors.grey.shade300),
+                ),
               ),
               PopupMenuItem(
                 child: Row(
                   children: [
-                    Text(themeChange.darkTheme ? 'Dark Theme' : 'Light Theme'),
+                    Text(
+                      themeChange.darkTheme ? 'Dark Theme' : 'Light Theme',
+                      style: TextStyle(color: Colors.grey.shade300),
+                    ),
                     Checkbox(
                         value: themeChange.darkTheme,
                         onChanged: (value) {
@@ -53,7 +63,10 @@ class _ProfilePopupMenu extends StatelessWidget {
                               builder: (context) =>
                                   const UserImageCollection()));
                     },
-                    child: const Text('My Collection')),
+                    child: Text(
+                      'My Collection',
+                      style: TextStyle(color: Colors.grey.shade300),
+                    )),
               )
             ]);
   }

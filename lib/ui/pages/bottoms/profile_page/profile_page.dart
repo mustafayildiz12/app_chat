@@ -18,6 +18,7 @@ part 'modules/user_profile_image.dart';
 part 'modules/user_profile_info.dart';
 part 'modules/upload_profile_button.dart';
 part 'modules/profile_popup_menu.dart';
+part 'modules/update_bio_dialog.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);

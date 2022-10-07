@@ -47,8 +47,6 @@ class _ChatPageState extends State<ChatPage> {
     voiceRecordProvider.init();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -94,33 +92,38 @@ class _ChatPageState extends State<ChatPage> {
                     padding: const EdgeInsets.all(3.0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Theme.of(context).shadowColor,
+                          gradient: LinearGradient(colors: [
+                            Theme.of(context).errorColor,
+                            Colors.orange
+                          ]),
                           borderRadius: BorderRadius.circular(12)),
                       child: Center(
-                        child: Text(voiceRecordProvider.recorderTxt),
+                        child: Text(
+                          voiceRecordProvider.recorderTxt,
+                          style: TextStyle(color: Colors.grey.shade300),
+                        ),
                       ),
                     ),
                   )),
                   CircleAvatar(
                     radius: 18,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Theme.of(context).iconTheme.color,
                     child: IconButton(
-                     onPressed: ()async{
-                       await voiceRecordProvider.sendVoiceMessage(
-                          context, widget.getDetails);
-                     },
-                      icon:voiceRecordProvider.isRecordingMessageSending ?
-                      const CircularProgressIndicator()
-                       : Icon(
-                        
-                        voiceRecordProvider.recordingEnded
-                            ? Icons.send
-                            : voiceRecordProvider.isRecording
-                                ? Icons.stop
-                                : Icons.mic_outlined,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                      onPressed: () async {
+                        await voiceRecordProvider.sendVoiceMessage(
+                            context, widget.getDetails);
+                      },
+                      icon: voiceRecordProvider.isRecordingMessageSending
+                          ? const CircularProgressIndicator(color: Colors.white,)
+                          : Icon(
+                              voiceRecordProvider.recordingEnded
+                                  ? Icons.send
+                                  : voiceRecordProvider.isRecording
+                                      ? Icons.stop
+                                      : Icons.mic_outlined,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                     ),
                   ),
                 ],

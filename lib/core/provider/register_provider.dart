@@ -12,6 +12,7 @@ class RegisterProvider extends ChangeNotifier {
   String? email;
   String? password;
   String? profileImage;
+  String? bio;
 
   bool isAvailable = false;
   bool isCheckingUsername = false;
@@ -26,6 +27,7 @@ class RegisterProvider extends ChangeNotifier {
         uid: uid ?? '',
         username: username!,
         myFollowers: [],
+        bio: bio ?? '' ,
         myCollection: List.empty(growable: true),
         email: email,
         password: password,
@@ -39,7 +41,6 @@ class RegisterProvider extends ChangeNotifier {
 
       await DatabaseService().saveUsernames(username!, uid!);
     }
-    print(uid);
   }
 
   void notify() {

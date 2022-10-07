@@ -16,13 +16,16 @@ class RegisterPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-            color: Colors.amber, borderRadius: BorderRadius.circular(12)),
+            color: Theme.of(context).iconTheme.color,
+            borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
+                style: TextStyle(color: Colors.grey.shade300),
+                cursorColor: Colors.grey.shade300,
                 initialValue: registerProvider.username,
                 onChanged: (v) {
                   registerProvider.username = v;
@@ -31,26 +34,31 @@ class RegisterPage extends StatelessWidget {
                 validator: (value) =>
                     (value!.isEmpty) ? "Please Enter Username" : null,
                 decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person),
-                    suffixIcon: IconButton(
-                        onPressed: () async {
-                          registerProvider.isCheckingUsername = true;
-                          registerProvider.notify();
-                          await UserService().chechUsername(
-                            registerProvider.username!,
-                            context,
-                          );
-                          registerProvider.isCheckingUsername = false;
-                          registerProvider.notify();
-                        },
-                        icon: registerProvider.isCheckingUsername
-                            ? const CircularProgressIndicator()
-                            : const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              )),
-                    labelText: "Username",
-                    border: const OutlineInputBorder()),
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: Colors.grey.shade300,
+                  ),
+                  suffixIcon: IconButton(
+                      onPressed: () async {
+                        registerProvider.isCheckingUsername = true;
+                        registerProvider.notify();
+                        await UserService().chechUsername(
+                          registerProvider.username!,
+                          context,
+                        );
+                        registerProvider.isCheckingUsername = false;
+                        registerProvider.notify();
+                      },
+                      icon: registerProvider.isCheckingUsername
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            )),
+                  labelText: "Username",
+                ),
               ),
             ),
             Visibility(
@@ -60,35 +68,61 @@ class RegisterPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: TextFormField(
-                      initialValue: registerProvider.email,
+                      style: TextStyle(color: Colors.grey.shade300),
+                      cursorColor: Colors.grey.shade300,
+                      initialValue: registerProvider.bio,
                       onChanged: (v) {
-                        registerProvider.email = v;
+                        registerProvider.bio = v;
                         registerProvider.notify();
                       },
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.email),
-                          labelText: "Email",
-                          border: OutlineInputBorder()),
+                      decoration:  InputDecoration(
+                        prefixIcon: Icon(Icons.text_format,color: Colors.grey.shade300),
+                        labelText: "Bio",
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: TextFormField(
+                      style: TextStyle(color: Colors.grey.shade300),
+                      cursorColor: Colors.grey.shade300,
+                      initialValue: registerProvider.email,
+                      onChanged: (v) {
+                        registerProvider.email = v;
+                        registerProvider.notify();
+                      },
+                      decoration:  InputDecoration(
+                        prefixIcon: Icon(Icons.email,color: Colors.grey.shade300),
+                        labelText: "Email",
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.grey.shade300),
+                      cursorColor: Colors.grey.shade300,
                       onChanged: (v) {
                         registerProvider.password = v;
                         registerProvider.notify();
                       },
                       obscureText: true,
-                      decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
-                          labelText: "Password",
-                          border: OutlineInputBorder()),
+                      decoration:  InputDecoration(
+                        prefixIcon: Icon(Icons.lock,color: Colors.grey.shade300,),
+                        labelText: "Password",
+                      ),
                     ),
                   ),
                   ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context)
+                                .bottomSheetTheme
+                                .backgroundColor)),
                     onPressed: () async {
                       if (registerProvider.email == null ||
-                          registerProvider.password == null) {
+                          registerProvider.password == null ||
+                          registerProvider.bio == null) {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text('Fill all the infos'),
@@ -106,7 +140,7 @@ class RegisterPage extends StatelessWidget {
                     },
                     child: registerProvider.isRegistering
                         ? CircularProgressIndicator(
-                            color: Theme.of(context).indicatorColor,
+                            color: Colors.grey.shade300,
                           )
                         : const Text("Register"),
                   )
@@ -118,7 +152,10 @@ class RegisterPage extends StatelessWidget {
                 authProvider.isLoginPage = true;
                 authProvider.notify();
               },
-              child: const Text("Already Have Account"),
+              child: Text(
+                "Already Have Account",
+                style: TextStyle(color: Colors.grey.shade300),
+              ),
             ),
             SizedBox(
               height: Screen.height(context) * 4,

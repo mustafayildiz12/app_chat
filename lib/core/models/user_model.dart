@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 class UserModel {
   final String uid;
   String username;
+  String bio;
   String? token;
   String email;
   String? profileImage;
@@ -20,6 +21,7 @@ class UserModel {
       required this.password,
       required this.myFollowers,
       required this.myCollection,
+      required this.bio,
       this.profileImage,
       this.profileImagePath,
       this.token});
@@ -31,11 +33,13 @@ class UserModel {
       String? password,
       List? myFollowers,
       List? myCollection,
+      String? bio,
       String? profileImagePath,
       String? token,
       String? profileImage}) {
     return UserModel(
         uid: uid ?? this.uid,
+        bio: bio ?? this.bio,
         profileImagePath: profileImagePath ?? this.profileImagePath,
         username: username ?? this.username,
         myFollowers: myFollowers ?? this.myFollowers,
@@ -54,6 +58,7 @@ class UserModel {
 
     result.addAll({'email': email});
     result.addAll({'token': token});
+    result.addAll({'bio':bio});
     result.addAll({'profileImagePath': profileImagePath});
 
     result.addAll({'password': password});
@@ -66,6 +71,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<dynamic, dynamic> map) {
     return UserModel(
+      bio: map['bio']?? '',
         myFollowers: map['myFollowers'] ?? [],
         uid: map['uid'] ?? '',
         username: map['username'] ?? '',
@@ -90,6 +96,7 @@ class UserModel {
 
     return other is UserModel &&
         other.uid == uid &&
+        other.bio == bio &&
         other.username == username &&
         other.email == email &&
         other.token == token &&
@@ -106,6 +113,7 @@ class UserModel {
         username.hashCode ^
         email.hashCode ^
         token.hashCode ^
+        bio.hashCode ^
         profileImagePath.hashCode ^
         myFollowers.hashCode ^
         profileImage.hashCode ^

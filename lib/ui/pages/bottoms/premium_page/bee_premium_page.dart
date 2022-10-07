@@ -1,6 +1,3 @@
-
-import 'package:app_chat/core/service/database_service.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class BeePremiumPage extends StatefulWidget {
@@ -11,33 +8,33 @@ class BeePremiumPage extends StatefulWidget {
 }
 
 class _BeePremiumPageState extends State<BeePremiumPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: DatabaseService().ardunioStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            DatabaseEvent databaseEvent = snapshot.data as DatabaseEvent;
-
-            Map linkedHashMap = (databaseEvent.snapshot.value as Map);
-            List ardunio = linkedHashMap.values.toList();
-
-            ardunio.sort((a, b) => a.compareTo(b));
-
-            return ListView.builder(
-              itemCount: ardunio.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(ardunio[index].toString(),
-                ),);
-              },
-            );
-
-            // return const Center(child: Text("Data Var"));
-          }
-          return const Center(child: Text("Henüz mesaj yok"));
-        },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Send Data'),
+            ElevatedButton(
+                onPressed: () async {
+                  final before = DateTime.now();
+                  setState(() {
+                    isLoading = true;
+                  });
+               //   await DatabaseService().trySpeeds();
+                  final after = DateTime.now();
+                  setState(() {
+                    isLoading = false;
+                  });
+                  print(after.difference(before).inSeconds);
+                },
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Upload'))
+          ],
+        ),
       ),
     );
   }

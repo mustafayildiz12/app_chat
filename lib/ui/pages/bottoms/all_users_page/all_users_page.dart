@@ -125,7 +125,10 @@ class _AllUsersPageState extends State<AllUsersPage> {
                                 );
                               },
                               title: Text(data.username),
-                              subtitle: Text(data.email),
+                              subtitle: Text(
+                                data.bio,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               leading: data.profileImage != ''
                                   ? CircleAvatar(
                                       backgroundImage:

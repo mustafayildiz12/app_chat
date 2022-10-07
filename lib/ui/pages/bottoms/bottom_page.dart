@@ -18,8 +18,10 @@ class BottomPage extends StatelessWidget {
         onTap: bottomNavigationProvider.onItemTapped,
         currentIndex: bottomNavigationProvider.selectedIndex,
         items: const [
+         /*
           BottomNavigationBarItem(
               icon: Icon(Icons.money_sharp), label: "Premium"),
+          */
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Users"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],

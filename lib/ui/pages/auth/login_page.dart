@@ -13,41 +13,48 @@ class LoginPage extends StatelessWidget {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            color: Colors.teal, borderRadius: BorderRadius.circular(12)),
+            color: Theme.of(context).iconTheme.color,
+            borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                style: TextStyle(color: Colors.grey.shade300),
+                cursorColor: Colors.grey.shade300,
                 initialValue: authProvider.email,
                 onChanged: (v) {
                   authProvider.email = v;
                   authProvider.notify();
                 },
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.email),
-                    labelText: "Email",
-                    border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.email, color: Colors.grey.shade300),
+                  labelText: "Email",
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
+                style: TextStyle(color: Colors.grey.shade300),
+                cursorColor: Colors.grey.shade300,
                 onChanged: (v) {
                   authProvider.password = v;
                   authProvider.notify();
                 },
                 obscureText: true,
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.lock),
-                    labelText: "Password",
-                    border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock, color: Colors.grey.shade300),
+                  labelText: "Password",
+                ),
               ),
             ),
             ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).bottomSheetTheme.backgroundColor)),
                 onPressed: () async {
                   if (authProvider.email!.isEmpty ||
                       authProvider.password!.isEmpty) {
@@ -79,7 +86,10 @@ class LoginPage extends StatelessWidget {
                 authProvider.isLoginPage = false;
                 authProvider.notify();
               },
-              child: const Text('Register ?'),
+              child: Text(
+                'Register ?',
+                style: TextStyle(color: Colors.grey.shade300),
+              ),
             ),
             SizedBox(
               height: Screen.height(context) * 4,

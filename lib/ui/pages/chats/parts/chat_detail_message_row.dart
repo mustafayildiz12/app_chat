@@ -28,7 +28,10 @@ class _ChatDetailMessageRow extends StatelessWidget {
                           !chatDetailProvider.showVoiceRecord;
                       chatDetailProvider.notify();
                     },
-                    child: const Icon(Icons.record_voice_over),
+                    child: Icon(
+                      Icons.record_voice_over,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                   ),
                   suffixIcon: IconButton(
                     onPressed: () async {
@@ -36,7 +39,10 @@ class _ChatDetailMessageRow extends StatelessWidget {
                         chatDetailProvider: chatDetailProvider,
                       ).show(context);
                     },
-                    icon: const Icon(Icons.photo_camera),
+                    icon: Icon(
+                      Icons.photo_camera,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                   ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12))),
@@ -45,7 +51,7 @@ class _ChatDetailMessageRow extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: CircleAvatar(
-              backgroundColor: Colors.blue,
+              backgroundColor: Theme.of(context).iconTheme.color,
               child: IconButton(
                 onPressed: () async {
                   if (chatDetailProvider.chatController.text.isNotEmpty) {
@@ -116,7 +122,10 @@ class _ChatDetailBottomSheet extends StatelessWidget {
               Navigator.pop(context);
             },
             title: const Text('Kamera'),
-            trailing: const Icon(Icons.camera_alt)),
+            trailing: Icon(
+              Icons.camera_alt,
+              color: Theme.of(context).iconTheme.color,
+            )),
         ListTile(
             onTap: () {
               chatDetailProvider.selectImageFromGallery();
@@ -126,7 +135,10 @@ class _ChatDetailBottomSheet extends StatelessWidget {
               Navigator.pop(context);
             },
             title: const Text('Galeri'),
-            trailing: const Icon(Icons.photo))
+            trailing: Icon(
+              Icons.photo,
+              color: Theme.of(context).iconTheme.color,
+            ))
       ],
     );
   }
@@ -135,8 +147,7 @@ class _ChatDetailBottomSheet extends StatelessWidget {
 extension ChatDetailBottomSheetExtension on _ChatDetailBottomSheet {
   show(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Theme.of(context).shadowColor
-,      shape: const RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),
       ),

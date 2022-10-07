@@ -1,4 +1,5 @@
 part of '../chat_page.dart';
+
 class _ChatDetailPopupButton extends StatelessWidget {
   const _ChatDetailPopupButton({
     Key? key,
@@ -12,13 +13,15 @@ class _ChatDetailPopupButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      color: Theme.of(context).shadowColor,
+        color: Theme.of(context).bottomSheetTheme.backgroundColor,
         itemBuilder: (context) => [
               PopupMenuItem(
                 child: Text(
-                    userProvider.usermodel!.myFollowers.contains(getDetails.uid)
-                        ? "Takibi Bırak"
-                        : "Takip Et"),
+                  userProvider.usermodel!.myFollowers.contains(getDetails.uid)
+                      ? "Stop Following"
+                      : "Follow",
+                  style: TextStyle(color: Colors.grey.shade300),
+                ),
                 onTap: () async {
                   final DatabaseReference ref = FirebaseDatabase.instance
                       .ref("users")

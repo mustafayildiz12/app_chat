@@ -19,7 +19,7 @@ class _MainAuthPageState extends State<MainAuthPage> {
     AuthProvider authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(authProvider.isLoginPage ? "Register" : "Login"),
+        title: Text(authProvider.isLoginPage ? "Login" : "Register"),
         centerTitle: true,
       ),
       body: Padding(
@@ -28,7 +28,7 @@ class _MainAuthPageState extends State<MainAuthPage> {
           child: Column(
             children: [
               SizedBox(
-                height: Screen.height(context) * 60,
+                height: Screen.height(context) * 75,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 1000),
                   switchInCurve: Curves.easeInBack,

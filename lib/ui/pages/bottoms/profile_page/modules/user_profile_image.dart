@@ -14,7 +14,7 @@ class _UserProfileImage extends StatelessWidget {
       children: [
         imageProvider.pickedFile != null
             ? ClipRRect(
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.circular(Screen.width(context) * 25),
                 child: Image.file(
                   imageProvider.pickedFile!,
                   height: Screen.width(context) * 50,
@@ -22,9 +22,11 @@ class _UserProfileImage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               )
-            : userProvider.usermodel!.profileImagePath != ''
+            : userProvider.usermodel!.profileImagePath != '' &&
+                    userProvider.usermodel!.profileImagePath != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius:
+                        BorderRadius.circular(Screen.width(context) * 25),
                     child: Image.file(
                       File(userProvider.usermodel!.profileImagePath!),
                       height: Screen.width(context) * 50,

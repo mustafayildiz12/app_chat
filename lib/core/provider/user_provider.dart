@@ -13,6 +13,7 @@ import '../repostiroy/user_repository.dart';
 class UserProvider extends ChangeNotifier {
   UserModel? usermodel;
   String? updateUsername;
+  String? updateBio;
 
   Future<void> initUser(context) async {
     User? currentUser = UserService().getCurrentUser();

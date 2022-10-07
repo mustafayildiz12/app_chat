@@ -1,7 +1,7 @@
 part of '../profile_page.dart';
 
-class _UpdateUserNameDialog extends StatelessWidget {
-  const _UpdateUserNameDialog({
+class _UpdateBioDialog extends StatelessWidget {
+  const _UpdateBioDialog({
     Key? key,
     required this.userProvider,
   }) : super(key: key);
@@ -12,18 +12,19 @@ class _UpdateUserNameDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      title: const Text("Change Username"),
+      title: const Text("Update Bio"),
       content: TextFormField(
-        initialValue: userProvider.usermodel!.username,
+        initialValue: userProvider.usermodel!.bio,
+        maxLines: 4,
         decoration: InputDecoration(
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Screen.width(context) * 6)),
         ),
         onChanged: (v) {
-          userProvider.updateUsername = v;
+          userProvider.updateBio = v;
           userProvider.notify();
         },
-        maxLength: 55,
+        maxLength: 100,
       ),
       actions: [
         ElevatedButton(
@@ -38,9 +39,9 @@ class _UpdateUserNameDialog extends StatelessWidget {
                   .ref("users")
                   .child(userProvider.usermodel!.uid);
               await ref.update({
-                "username": userProvider.updateUsername,
+                "bio": userProvider.updateBio,
               });
-              userProvider.usermodel!.username = userProvider.updateUsername!;
+              userProvider.usermodel!.bio = userProvider.updateBio!;
               userProvider.notify();
               // ignore: use_build_context_synchronously
               Navigator.pop(context);
