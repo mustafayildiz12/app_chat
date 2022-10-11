@@ -24,6 +24,8 @@ class ChatDetailProvider extends ChangeNotifier {
   bool showRecordingButtons = false;
   bool showVoiceRecord = false;
 
+  bool isMapReadyToSend = false;
+
   UserMetadata? opponent;
 
   File? pickedFile;
@@ -39,7 +41,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
   final bool _serviceEnabled = false;
   PermissionStatus? _permissionGranted;
-  LocationData? _locationData;
+  LocationData? locationData;
 
   Future uploadFile(BuildContext context, String chatID) async {
     final file = File(pickedFile?.path ?? '');
@@ -171,6 +173,12 @@ class ChatDetailProvider extends ChangeNotifier {
     return true;
   }
 
+  getUserLocation() async {
+    locationData = await location.getLocation();
+     isMapReadyToSend = true;
+    notify();
+  }
+
   sendLocation(BuildContext context) async {
     final canSendLocation = await setupLocation();
     if (canSendLocation != true) {
@@ -182,8 +190,6 @@ class ChatDetailProvider extends ChangeNotifier {
         ),
       );
     }
-
-    // ignore: use_build_context_synchronously
 
     return;
   }

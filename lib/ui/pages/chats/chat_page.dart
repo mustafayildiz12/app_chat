@@ -8,6 +8,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/models/message_model.dart';
@@ -23,6 +24,8 @@ part 'modules/chat_stream.dart';
 part 'modules/message_list.dart';
 part 'modules/show_pick_image_dialog.dart';
 part 'modules/map_image_thumbnail.dart';
+part 'modules/map_page.dart';
+
 class ChatPage extends StatefulWidget {
   final UserModel getDetails;
   const ChatPage({required this.getDetails, Key? key}) : super(key: key);
@@ -114,7 +117,9 @@ class _ChatPageState extends State<ChatPage> {
                             context, widget.getDetails);
                       },
                       icon: voiceRecordProvider.isRecordingMessageSending
-                          ? const CircularProgressIndicator(color: Colors.white,)
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
                           : Icon(
                               voiceRecordProvider.recordingEnded
                                   ? Icons.send

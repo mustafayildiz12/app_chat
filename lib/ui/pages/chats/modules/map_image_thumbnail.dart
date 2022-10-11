@@ -20,7 +20,7 @@ class MapImageThumbnail extends StatelessWidget {
           'zoom': '18',
           'size': '700x500',
           'maptype': 'roadmap',
-          'key': 'AIzaSyCj1r_0PbZgE4z_Uk6uEZQAJiHXdM0Jr9c',
+          'key': 'AIzaSyCpX-w04XMAIaGd61gqPzEtakmXdScB-bM',
           'markers': 'color:red|$lat,$long'
         },
       ).toString();
@@ -29,8 +29,8 @@ class MapImageThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.network(
       _constructUrl,
-      height: 100.0,
-      width: 200.0,
+      height:Screen.height(context) * 40,
+      width:Screen.width(context) * 50,
       fit: BoxFit.fill,
     );
   }

@@ -119,8 +119,14 @@ class _MessagesList extends StatelessWidget {
                               : message.type == 'voice'
                                   ? VoiceMessage(message: message)
                                   : message.type == 'location'
-                                      ? MapImageThumbnail(
-                                          lat: message.lat!, long: message.lon!)
+                                      ? GestureDetector(
+                                        onTap: (){
+                                          Navigator.push(context, MaterialPageRoute(builder:
+                                           (context)=> _MapPage(lat: message.lat!, lon: message.lon!) ));
+                                        },
+                                        child: MapImageThumbnail(
+                                            lat: message.lat!, long: message.lon!),
+                                      )
                                       : Text(
                                           message.message,
                                           style: TextStyle(

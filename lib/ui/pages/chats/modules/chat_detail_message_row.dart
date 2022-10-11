@@ -102,18 +102,7 @@ class _ChatDetailMessageRow extends StatelessWidget {
                 onPressed: () async {
                   await chatDetailProvider.sendLocation(context);
 
-                  final locationData =
-                      await chatDetailProvider.location.getLocation();
-
-                  // ignore: use_build_context_synchronously
-                  await ChatService().sendMessage(context,
-                      chatUser: widget.getDetails,
-                      message: chatDetailProvider.chatController.text,
-                      type: 'location',
-                      lat: locationData.latitude,
-                      lon: locationData.longitude,
-                      chatID:
-                          '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
+                  await chatDetailProvider.getUserLocation();
                 },
                 icon: const Icon(
                   Icons.location_history,

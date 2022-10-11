@@ -22,6 +22,7 @@ class _ChatStream extends StatelessWidget {
           if (snapshot.hasData) {
             if (snapshot.data != null) {
               var data = (snapshot.data as DatabaseEvent).snapshot.value;
+
               if (data != null) {
                 Map dataMap = data as Map;
                 final chatID = dataMap['chatID'];
@@ -65,7 +66,70 @@ class _ChatStream extends StatelessWidget {
                                   ))
                             ],
                           )
-                        : const SizedBox()
+                        : chatDetailProvider.isMapReadyToSend
+                            ? Stack(
+                                children: [
+                                  MapImageThumbnail(
+                                    lat: chatDetailProvider
+                                        .locationData!.latitude!,
+                                    long: chatDetailProvider
+                                        .locationData!.longitude!,
+                                  ),
+                                  Positioned(
+                                    top: 1,
+                                    right: 3,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        chatDetailProvider.isMapReadyToSend =
+                                            false;
+                                        chatDetailProvider.notify();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        child: const Icon(Icons.close_sharp),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      bottom: 1,
+                                      right: 3,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          final locationData =
+                                              await chatDetailProvider.location
+                                                  .getLocation();
+
+                                          // ignore: use_build_context_synchronously
+                                          await ChatService().sendMessage(
+                                              context,
+                                              chatUser: getDetails,
+                                              message: chatDetailProvider
+                                                  .chatController.text,
+                                              type: 'location',
+                                              lat: locationData.latitude,
+                                              lon: locationData.longitude,
+                                              chatID:
+                                                  '${userProvider.usermodel!.uid}${getDetails.uid}');
+                                          chatDetailProvider.isMapReadyToSend =
+                                              false;
+                                          chatDetailProvider.notify();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          child: const Icon(Icons.bluetooth),
+                                        ),
+                                      ))
+                                ],
+                              )
+                            : const SizedBox()
                   ],
                 );
               } else {
