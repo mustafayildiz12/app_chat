@@ -49,6 +49,8 @@ class _MessagesList extends StatelessWidget {
                   'senderUID': messageHashMap['senderUID'],
                   'seen': messageHashMap['seen'],
                   'id': messageHashMap['id'],
+                  'lat': messageHashMap['lat'],
+                  'lon': messageHashMap['lon'],
                 };
 
                 Message message = Message.fromMap(messageMap);
@@ -116,11 +118,14 @@ class _MessagesList extends StatelessWidget {
                                 )
                               : message.type == 'voice'
                                   ? VoiceMessage(message: message)
-                                  : Text(
-                                      message.message,
-                                      style: TextStyle(
-                                          color: Colors.grey.shade300),
-                                    )),
+                                  : message.type == 'location'
+                                      ? MapImageThumbnail(
+                                          lat: message.lat!, long: message.lon!)
+                                      : Text(
+                                          message.message,
+                                          style: TextStyle(
+                                              color: Colors.grey.shade300),
+                                        )),
                       Row(
                         mainAxisAlignment: sendedByMe
                             ? MainAxisAlignment.end

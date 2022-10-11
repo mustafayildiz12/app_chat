@@ -16,13 +16,13 @@ import '../../../core/provider/voice_record_provider.dart';
 import '../../../core/service/database_service.dart';
 import '../../../utils/helpers/custom_audio_player.dart';
 
-part 'parts/chat_detail_appbar.dart';
-part 'parts/chat_detail_popup_button.dart';
-part 'parts/chat_detail_message_row.dart';
-part 'parts/chat_stream.dart';
-part 'parts/message_list.dart';
-part 'parts/show_pick_image_dialog.dart';
-
+part 'modules/chat_detail_appbar.dart';
+part 'modules/chat_detail_popup_button.dart';
+part 'modules/chat_detail_message_row.dart';
+part 'modules/chat_stream.dart';
+part 'modules/message_list.dart';
+part 'modules/show_pick_image_dialog.dart';
+part 'modules/map_image_thumbnail.dart';
 class ChatPage extends StatefulWidget {
   final UserModel getDetails;
   const ChatPage({required this.getDetails, Key? key}) : super(key: key);

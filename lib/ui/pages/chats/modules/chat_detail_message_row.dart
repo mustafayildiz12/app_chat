@@ -93,6 +93,34 @@ class _ChatDetailMessageRow extends StatelessWidget {
                     : const Icon(Icons.send_sharp),
               ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).iconTheme.color,
+              child: IconButton(
+                onPressed: () async {
+                  await chatDetailProvider.sendLocation(context);
+
+                  final locationData =
+                      await chatDetailProvider.location.getLocation();
+
+                  // ignore: use_build_context_synchronously
+                  await ChatService().sendMessage(context,
+                      chatUser: widget.getDetails,
+                      message: chatDetailProvider.chatController.text,
+                      type: 'location',
+                      lat: locationData.latitude,
+                      lon: locationData.longitude,
+                      chatID:
+                          '${userProvider.usermodel!.uid}${widget.getDetails.uid}');
+                },
+                icon: const Icon(
+                  Icons.location_history,
+                  size: 20,
+                ),
+              ),
+            ),
           )
         ],
       ),

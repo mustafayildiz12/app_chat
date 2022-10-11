@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 import '../../utils/helpers/my_image_picker.dart';
 import '../models/message_model.dart';
@@ -33,6 +33,13 @@ class ChatDetailProvider extends ChangeNotifier {
   String imagePath = '';
   bool isLoading = false;
   bool isSendingImage = false;
+
+  // ignore: unnecessary_new
+  Location location = new Location();
+
+  final bool _serviceEnabled = false;
+  PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
 
   Future uploadFile(BuildContext context, String chatID) async {
     final file = File(pickedFile?.path ?? '');
@@ -120,8 +127,6 @@ class ChatDetailProvider extends ChangeNotifier {
     required String message,
     required void Function(String) onNewChatID,
     required String type,
-
-    //  bool isVoice = false,
   }) async {
     chatController.clear();
     await ChatService().sendMessage(
@@ -129,16 +134,12 @@ class ChatDetailProvider extends ChangeNotifier {
       chatUser: chatUser,
       message: message,
       type: type,
-      // onNewChatID: onNewChatID,
       chatID: chatID,
-
-      // isVoice: is
-      //  isVoice: isVoice);
     );
-    const Duration(milliseconds: 300);
+    const Duration(milliseconds: 100);
     if (scrollController.positions.isNotEmpty) {
       scrollController.animateTo(scrollController.position.maxScrollExtent,
-          duration: const Duration(microseconds: 100), curve: Curves.bounceIn);
+          duration: const Duration(microseconds: 50), curve: Curves.bounceIn);
     }
   }
 
@@ -148,61 +149,44 @@ class ChatDetailProvider extends ChangeNotifier {
     readedMessages.add(message);
   }
 
-/*
-  void toggleRecording() {
-    if (recordingStarted) {
-      endRecording();
-    } else {
-      startRecording();
-    }
-    notifyListeners();
-  }
-
-  Future<void> startRecording() async {
-    recordingStarted = true;
-    showTextfield = false;
-    await Future.delayed(const Duration(milliseconds: 100));
-    showRecordingButtons = true;
-    notifyListeners();
-  }
-
-  Future<void> endRecording() async {
-    recordingStarted = false;
-    showRecordingButtons = false;
-    await Future.delayed(const Duration(milliseconds: 300));
-    showTextfield = true;
-    notifyListeners();
-  }
-
-  Future<void> openOtherOptions(context, {required Function(bool isVideo) onImageSelected}) async {
-    String otherOption = await showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => OtherOptions(),
-    );
-    if (otherOption == 'camera') {
-      imageToUpload = await MyImagePicker.takePicture();
-      print(imageToUpload.toString());
-    } else if (otherOption == 'gallery') {
-      imageToUpload = await MyImagePicker.pickImage();
-      print(imageToUpload.toString());
-    } else if (otherOption == 'video') {
-      imageToUpload = await MyImagePicker.pickVideo();
-      print(imageToUpload.toString());
-    }
-    if (imageToUpload != null) {
-      bool? send = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ConfirmMedia(media: imageToUpload!, otherOption: otherOption),
-        ),
-      );
-
-      if (send == true) {
-        onImageSelected(otherOption == 'video');
+  Future<bool> setupLocation() async {
+    location;
+    var serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return false;
       }
     }
+
+    var permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return false;
+      }
+    }
+    notify();
+
+    return true;
   }
- */
+
+  sendLocation(BuildContext context) async {
+    final canSendLocation = await setupLocation();
+    if (canSendLocation != true) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              "We can't access your location at this time. Did you allow location access?"),
+        ),
+      );
+    }
+
+    // ignore: use_build_context_synchronously
+
+    return;
+  }
 
   void notify() {
     notifyListeners();

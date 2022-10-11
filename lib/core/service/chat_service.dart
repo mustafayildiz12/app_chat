@@ -16,6 +16,8 @@ class ChatService {
     required UserModel chatUser,
     required String message,
     //   required void Function(String chatID) onNewChatID,
+    double? lat,
+    double? lon,
     required String type,
     //   bool isVoice = false,
   }) async {
@@ -59,10 +61,8 @@ class ChatService {
           'starter': true,
         },
       ],
-      //  'anonym': true,
     });
 
-    //  onNewChatID(newChatID);
 
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     await database
@@ -72,6 +72,8 @@ class ChatService {
         .child(id)
         .set({
       'message': message,
+      'lat': lat,
+      'lon':lon,
       'date': DateTime.now().toString(),
       'senderUID': userModel.uid,
       'seen': false,
@@ -86,6 +88,8 @@ class ChatService {
         .child(id)
         .set({
       'message': message,
+      'lat': lat,
+      'lon':lon,
       'date': DateTime.now().toString(),
       'senderUID': userModel.uid,
       'seen': false,
