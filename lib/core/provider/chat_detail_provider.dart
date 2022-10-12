@@ -26,6 +26,8 @@ class ChatDetailProvider extends ChangeNotifier {
 
   bool isMapReadyToSend = false;
 
+  bool emojiShowing = false;
+
   UserMetadata? opponent;
 
   File? pickedFile;
@@ -175,7 +177,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
   getUserLocation() async {
     locationData = await location.getLocation();
-     isMapReadyToSend = true;
+    isMapReadyToSend = true;
     notify();
   }
 

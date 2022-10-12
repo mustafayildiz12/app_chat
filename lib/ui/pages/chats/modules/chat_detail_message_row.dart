@@ -18,8 +18,20 @@ class _ChatDetailMessageRow extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
+          IconButton(
+              onPressed: () {
+                chatDetailProvider.emojiShowing =
+                    !chatDetailProvider.emojiShowing;
+                chatDetailProvider.notify();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              icon: const Icon(Icons.emoji_emotions)),
           Expanded(
             child: TextFormField(
+              onTap: () {
+                chatDetailProvider.emojiShowing = false;
+                chatDetailProvider.notify();
+              },
               controller: chatDetailProvider.chatController,
               decoration: InputDecoration(
                   prefixIcon: GestureDetector(
@@ -40,7 +52,7 @@ class _ChatDetailMessageRow extends StatelessWidget {
                       ).show(context);
                     },
                     icon: Icon(
-                      Icons.photo_camera,
+                      Icons.more_vert,
                       color: Theme.of(context).iconTheme.color,
                     ),
                   ),
@@ -94,23 +106,6 @@ class _ChatDetailMessageRow extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).iconTheme.color,
-              child: IconButton(
-                onPressed: () async {
-                  await chatDetailProvider.sendLocation(context);
-
-                  await chatDetailProvider.getUserLocation();
-                },
-                icon: const Icon(
-                  Icons.location_history,
-                  size: 20,
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -138,24 +133,48 @@ class _ChatDetailBottomSheet extends StatelessWidget {
               chatDetailProvider.notify();
               Navigator.pop(context);
             },
-            title: const Text('Kamera'),
+            title: Text(
+              'Camera',
+              style: TextStyle(color: Colors.grey.shade300),
+            ),
             trailing: Icon(
               Icons.camera_alt,
               color: Theme.of(context).iconTheme.color,
             )),
         ListTile(
-            onTap: () {
-              chatDetailProvider.selectImageFromGallery();
+          onTap: () {
+            chatDetailProvider.selectImageFromGallery();
 
-              chatDetailProvider.isLoading = true;
-              chatDetailProvider.notify();
-              Navigator.pop(context);
-            },
-            title: const Text('Galeri'),
-            trailing: Icon(
-              Icons.photo,
-              color: Theme.of(context).iconTheme.color,
-            ))
+            chatDetailProvider.isLoading = true;
+            chatDetailProvider.notify();
+            Navigator.pop(context);
+          },
+          title: Text(
+            'Galery',
+            style: TextStyle(color: Colors.grey.shade300),
+          ),
+          trailing: Icon(
+            Icons.photo,
+            color: Theme.of(context).iconTheme.color,
+          ),
+        ),
+        ListTile(
+          onTap: () async {
+            await chatDetailProvider.sendLocation(context);
+
+            await chatDetailProvider.getUserLocation();
+            // ignore: use_build_context_synchronously
+            Navigator.pop(context);
+          },
+          title: Text(
+            'Share Location',
+            style: TextStyle(color: Colors.grey.shade300),
+          ),
+          trailing: Icon(
+            Icons.location_history,
+            color: Theme.of(context).iconTheme.color,
+          ),
+        ),
       ],
     );
   }

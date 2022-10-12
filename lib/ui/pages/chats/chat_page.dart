@@ -1,10 +1,12 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:app_chat/core/class/screen_class.dart';
 import 'package:app_chat/core/models/user_model.dart';
 import 'package:app_chat/core/provider/chat_detail_provider.dart';
 import 'package:app_chat/core/service/chat_service.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,8 @@ part 'modules/message_list.dart';
 part 'modules/show_pick_image_dialog.dart';
 part 'modules/map_image_thumbnail.dart';
 part 'modules/map_page.dart';
+part 'modules/show_stacked_image_preview.dart';
+part 'modules/show_stacked_map_preview.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel getDetails;
@@ -35,8 +39,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  // final TextEditingController _chat = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -67,7 +69,8 @@ class _ChatPageState extends State<ChatPage> {
             chatDetailProvider: chatDetailProvider,
             getDetails: widget.getDetails,
           ),
-          if (chatDetailProvider.showVoiceRecord)
+          if (chatDetailProvider.showVoiceRecord &&
+              !chatDetailProvider.isMapReadyToSend)
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -134,11 +137,49 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-          if (!chatDetailProvider.showVoiceRecord)
+          if (!chatDetailProvider.showVoiceRecord &&
+              !chatDetailProvider.isMapReadyToSend)
             _ChatDetailMessageRow(
                 chatDetailProvider: chatDetailProvider,
                 widget: widget,
-                userProvider: userProvider)
+                userProvider: userProvider),
+          Offstage(
+            offstage: !chatDetailProvider.emojiShowing,
+            child: SizedBox(
+                height: 250,
+                child: EmojiPicker(
+                  textEditingController: chatDetailProvider.chatController,
+                  config: Config(
+                    columns: 7,
+                    emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                    verticalSpacing: 0,
+                    horizontalSpacing: 0,
+                    gridPadding: EdgeInsets.zero,
+                    initCategory: Category.RECENT,
+                    bgColor: const Color(0xFFF2F2F2),
+                    indicatorColor: Colors.blue,
+                    iconColor: Colors.grey,
+                    iconColorSelected: Colors.blue,
+                    backspaceColor: Colors.blue,
+                    skinToneDialogBgColor: Colors.white,
+                    skinToneIndicatorColor: Colors.grey,
+                    enableSkinTones: true,
+                    showRecentsTab: true,
+                    recentsLimit: 28,
+                    replaceEmojiOnLimitExceed: false,
+                    noRecents: const Text(
+                      'No Recents',
+                      style: TextStyle(fontSize: 20, color: Colors.black26),
+                      textAlign: TextAlign.center,
+                    ),
+                    loadingIndicator: const SizedBox.shrink(),
+                    tabIndicatorAnimDuration: kTabScrollDuration,
+                    categoryIcons: const CategoryIcons(),
+                    buttonMode: ButtonMode.MATERIAL,
+                    checkPlatformCompatibility: true,
+                  ),
+                )),
+          ),
         ],
       ),
     );

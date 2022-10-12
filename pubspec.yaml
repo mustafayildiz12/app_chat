@@ -61,6 +61,7 @@ dependencies:
   flutter_echarts: ^2.4.0
   location: ^4.4.0
   google_maps_flutter: ^2.2.1
+  emoji_picker_flutter: ^1.4.0
 
 dev_dependencies:
   flutter_test:

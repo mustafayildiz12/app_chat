@@ -39,96 +39,13 @@ class _ChatStream extends StatelessWidget {
                       ),
                     ),
                     chatDetailProvider.pickedFile != null
-                        ? Stack(
-                            children: [
-                              Image.file(
-                                chatDetailProvider.pickedFile!,
-                                height: Screen.width(context) * 50,
-                                width: Screen.width(context) * 50,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                  top: 1,
-                                  right: 3,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      chatDetailProvider.pickedFile = null;
-                                      chatDetailProvider.notify();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      child: const Icon(Icons.close_sharp),
-                                    ),
-                                  ))
-                            ],
-                          )
+                        ? _ShowStackedImagePreview(
+                            chatDetailProvider: chatDetailProvider)
                         : chatDetailProvider.isMapReadyToSend
-                            ? Stack(
-                                children: [
-                                  MapImageThumbnail(
-                                    lat: chatDetailProvider
-                                        .locationData!.latitude!,
-                                    long: chatDetailProvider
-                                        .locationData!.longitude!,
-                                  ),
-                                  Positioned(
-                                    top: 1,
-                                    right: 3,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        chatDetailProvider.isMapReadyToSend =
-                                            false;
-                                        chatDetailProvider.notify();
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                        child: const Icon(Icons.close_sharp),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                      bottom: 1,
-                                      right: 3,
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          final locationData =
-                                              await chatDetailProvider.location
-                                                  .getLocation();
-
-                                          // ignore: use_build_context_synchronously
-                                          await ChatService().sendMessage(
-                                              context,
-                                              chatUser: getDetails,
-                                              message: chatDetailProvider
-                                                  .chatController.text,
-                                              type: 'location',
-                                              lat: locationData.latitude,
-                                              lon: locationData.longitude,
-                                              chatID:
-                                                  '${userProvider.usermodel!.uid}${getDetails.uid}');
-                                          chatDetailProvider.isMapReadyToSend =
-                                              false;
-                                          chatDetailProvider.notify();
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(4),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          child: const Icon(Icons.bluetooth),
-                                        ),
-                                      ))
-                                ],
-                              )
+                            ? _ShowStackedMapPreview(
+                                chatDetailProvider: chatDetailProvider,
+                                getDetails: getDetails,
+                                userProvider: userProvider)
                             : const SizedBox()
                   ],
                 );
