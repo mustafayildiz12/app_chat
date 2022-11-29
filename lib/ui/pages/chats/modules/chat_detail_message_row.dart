@@ -33,6 +33,7 @@ class _ChatDetailMessageRow extends StatelessWidget {
                 chatDetailProvider.notify();
               },
               controller: chatDetailProvider.chatController,
+              maxLines: null,
               decoration: InputDecoration(
                   prefixIcon: GestureDetector(
                     onTap: () {
@@ -101,7 +102,9 @@ class _ChatDetailMessageRow extends StatelessWidget {
                   }
                 },
                 icon: chatDetailProvider.isSendingImage
-                    ? const CircularProgressIndicator()
+                    ? CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      )
                     : const Icon(Icons.send_sharp),
               ),
             ),
