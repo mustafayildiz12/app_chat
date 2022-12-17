@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-           ChangeNotifierProvider(create: (context) => themeChangeProvider),
+          ChangeNotifierProvider(create: (context) => themeChangeProvider),
           ChangeNotifierProvider(create: (context) => SplashProvider()),
           ChangeNotifierProvider(create: (context) => SplashProvider()),
           ChangeNotifierProvider(create: (context) => VoiceRecordProvider()),
@@ -61,11 +61,16 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(
               create: (context) => BottomNavigationProvider()),
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeStyles.themeData(themeChangeProvider.darkTheme, context),
-          home: const SplashScreen(),
+        child: Consumer<DarkThemeProvider>(
+          builder: (context, value, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme:
+                  ThemeStyles.themeData(themeChangeProvider.darkTheme, context),
+              home: const SplashScreen(),
+            );
+          },
         ));
   }
 }
